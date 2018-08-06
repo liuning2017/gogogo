@@ -6,19 +6,20 @@ public int trap(int[] heights) {
     if (heights == null || heights.length < 3) return 0;
 
     Stack<Integer> stack = new Stack<Integer>();
-    int water = 0;
     int i = 0;
+    int res = 0;
     while (i < heights.length) {
         if (stack.empty() || heights[i] <= heights[stack.peek()]) {
             stack.push(i++);
         } else {
-            int t = stack.pop();
-            if (stack.empty()) continue;
-            int h = Math.min(heights[i], heights[stack.peek()]) - heights[t];
-            int w = i - stack.peek() - 1;
-            water += h * w;
+            int bottom = heights[stack.pop()];
+            while (!stack.empty() && heights[stack.peek()] == bottom) stack.pop();
+            if (!stack.empty()) {
+                int j = stack.peek();
+                res += (Math.min(heights[j], heights[i]) - bottom) * (i - j - 1);
+            }
         }
     }
 
-    return water;
+    return res;
 }
