@@ -1,0 +1,49 @@
+public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+    List<Integer> result = new ArrayList<Integer>();
+    if (root == null) return result;
+
+    TreeNode node = root;
+    Queue<TreeNode> leftB = new LinkedList<TreeNode>();
+    while (node != null) {
+        leftB.add(node);
+        if (node.left != null) node = node.left;
+        else if (node != root) node = node.right;
+        else node = null;
+    }
+
+    Queue<TreeNode> leaves = new LinkedList<TreeNode>();
+    findLeaves(root, leaves);
+
+    node = root.right;
+    Stack<TreeNode> rightB = new Stack<TreeNode>();
+    while (node != null) {
+        rightB.push(node);
+        if (node.right != null) node = node.right;
+        else node = node.left;
+    }
+
+    while (leftB.size() > 0) {
+        node = leftB.remove();
+        result.add(node.val);
+    }
+
+    if (leaves.size() > 0 && node == leaves.peek()) leaves.remove();
+    while (leaves.size() > 0) {
+        node = leaves.remove();
+        result.add(node.val);
+    }
+
+    if (!rightB.empty() && node == rightB.peek()) rightB.pop();
+    while (!rightB.empty()) {
+        node = rightB.pop();
+        result.add(node.val);
+    }
+
+    return result;
+}
+
+private static void findLeaves(TreeNode node, Queue<TreeNode> leaves) {
+    if (node.left == null && node.right == null) leaves.add(node);
+    if (node.left != null) findLeaves(node.left, leaves);
+    if (node.right != null) findLeaves(node.right, leaves);
+}       

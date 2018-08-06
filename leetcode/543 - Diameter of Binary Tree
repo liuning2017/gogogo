@@ -1,0 +1,48 @@
+/**
+         * Given a binary tree, you need to compute the length of the diameter of the tree. 
+         * The diameter of a binary tree is the length of the longest path between any two nodes in a tree. 
+         * This path may or may not pass through the root.
+
+        Example:
+        Given a binary tree 
+                  1
+                 / \
+                2   3
+               / \     
+              4   5    
+        Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
+
+        Note: The length of path between two nodes is represented by the number of edges between them.
+         **/
+        public static int DiameterOfBT(TreeNode root)
+        {
+            int diameter = 0;
+            DoDiameterOfBT(root, ref diameter);
+            return diameter;
+        }
+        private static int DoDiameterOfBT(TreeNode node, ref int diameter)
+        {
+            if (node == null) return 0;
+            var leftPath = DoDiameterOfBT(node.Left, ref diameter);
+            var righPath = DoDiameterOfBT(node.Right, ref diameter);
+            diameter = Math.Max(diameter, leftPath + righPath);
+            return 1 + Math.Max(leftPath, righPath);
+        }
+        
+        [TestMethod]
+        public void DiameterOfBT()
+        {
+            var root = new TreeNode(1);
+            root.Left = new TreeNode(2);
+            root.Right = new TreeNode(3);
+            root.Left.Left = new TreeNode(4);
+            root.Left.Right = new TreeNode(5);
+            Assert.AreEqual(3, TreeAndGraph.DiameterOfBT(root));
+
+            root.Left.Left.Left = new TreeNode(6);
+            root.Left.Left.Left.Right = new TreeNode(6);
+            root.Left.Right.Left = new TreeNode(7);
+            root.Left.Right.Left.Right = new TreeNode(7);
+            Assert.AreEqual(6, TreeAndGraph.DiameterOfBT(root));
+        }
+        

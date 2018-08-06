@@ -1,0 +1,42 @@
+Suppose we abstract our file system by a string in the following manner:
+
+The string "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext" represents:
+dir
+    subdir1
+    subdir2
+        file.ext
+
+The string "dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext" represents:
+dir
+    subdir1
+        file1.ext
+        subsubdir1
+    subdir2
+        subsubdir2
+            file2.ext
+           
+We are interested in finding the longest (number of characters) absolute path to a file within our file system. 
+For example, in the second example above, the longest absolute path is "dir/subdir2/subsubdir2/file2.ext", and its length is 32.
+
+Given a string representing the file system in the above format, return the length of the longest absolute path to file 
+in the abstracted file system. If there is no file in the system, return 0.
+Note:
+The name of a file contains at least a . and an extension.
+The name of a directory or sub-directory will not contain a ..
+
+public int lengthLongestPath(String input) {
+    int res = 0;
+    HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+    hm.put(0, 0);
+    for (String s : input.split("\n")) {
+        int level = s.lastIndexOf("\t") + 1; 
+        int len = s.substring(level).length();
+        if (s.indexOf(".") > 0) {
+            res = Math.max(res, hm.get(level) + len);
+        } else {
+            hm.put(level + 1, hm.get(level) + len + 1); // "dir/" is saved as level 1
+        }
+    }
+
+    return res;
+}

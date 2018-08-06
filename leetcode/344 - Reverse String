@@ -1,0 +1,17 @@
+public string ReverseString(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return string.Empty;
+            int i = 0;
+            int j = s.Length - 1;
+            char[] result = new char[s.Length];
+            while (i < j)
+            {
+                result[i] = s[j];
+                result[j] = s[i];
+                i++;
+                j--;
+            }
+            if (i == j) result[i] = s[i];
+            return new string(result);
+        }
+        

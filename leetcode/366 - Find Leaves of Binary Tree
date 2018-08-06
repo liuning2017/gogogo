@@ -1,0 +1,39 @@
+public List<List<Integer>> findLeaves(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<List<Integer>>();
+    if (root == null) return result;
+
+    while (root.left != null || root.right != null) {
+        List<Integer> leaves = new ArrayList<Integer>();
+        removeLeaves(root, leaves);
+        result.add(leaves);
+    }
+
+    List<Integer> rootList = new ArrayList<Integer>();
+    rootList.add(root.val);
+    result.add(rootList);
+
+    return result;
+}
+
+private static void removeLeaves(TreeNode node, List<Integer> leaves) {
+    TreeNode leftNode = node.left;
+    if (leftNode != null) {
+        if (leftNode.left == null && leftNode.right == null) { 
+            leaves.add(leftNode.val);
+            node.left = null;
+        } else {
+            removeLeaves(leftNode, leaves);
+        }
+    }
+
+    TreeNode rightNode = node.right;
+    if (rightNode != null) {
+        if (rightNode.left == null && rightNode.right == null) { 
+            leaves.add(rightNode.val);
+            node.right = null;
+        } else {
+            removeLeaves(rightNode, leaves);
+        }
+    }
+}
+

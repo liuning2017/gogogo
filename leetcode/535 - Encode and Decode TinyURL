@@ -1,0 +1,46 @@
+TinyURL is a URL shortening service where you enter a URL such as https://leetcode.com/problems/design-tinyurl 
+and it returns a short URL such as http://tinyurl.com/4e9iAk.
+Design the encode and decode methods for the TinyURL service. There is no restriction on how your encode/decode algorithm should work. 
+You just need to ensure that a URL can be encoded to a tiny URL and the tiny URL can be decoded to the original URL.
+
+public class Codec {
+    private static String dict = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static int len = 6;
+    private static String prefix = "http://tinyurl.com/";
+    private HashMap<String, String> long2Short = new HashMap<String, String>();
+    private HashMap<String, String> short2Long = new HashMap<String, String>();
+    private Random rand = new Random();
+    
+    // Encodes a URL to a shortened URL.
+    public String encode(String longUrl) {
+        if (long2Short.containsKey(longUrl)) {
+            return prefix + long2Short.get(longUrl);
+        }
+        
+        char[] cs = new char[len];
+        for (int i = 0; i < len; i++) {
+            cs[i] = dict.charAt(rand.nextInt(62));
+        }
+        int index = 0;
+        String shortUrl = new String(cs);
+        while (short2Long.containsKey(shortUrl)) {
+            cs[index] = dict.charAt(rand.nextInt(62));
+            shortUrl = new String(cs);
+            index = (index + 1) % len;
+        }
+        long2Short.put(longUrl, shortUrl);
+        short2Long.put(shortUrl, longUrl);
+        
+        return prefix + new String(shortUrl); 
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public String decode(String shortUrl) {
+        shortUrl = shortUrl.substring(shortUrl.lastIndexOf("/") + 1);
+        return short2Long.containsKey(shortUrl) ? short2Long.get(shortUrl) : shortUrl;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(url));

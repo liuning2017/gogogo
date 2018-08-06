@@ -1,0 +1,55 @@
+Given an integer matrix, find the length of the longest increasing path.
+From each cell, you can either move to four directions: left, right, up or down. You may NOT move diagonally.
+
+Example 1:
+Input: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+Output: 4. Explanation: The longest increasing path is [1, 2, 6, 9].
+
+Example 2:
+Input: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+Output: 4. Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+
+public int longestIncreasingPath(int[][] matrix) {
+    if (matrix == null || matrix.length == 0 || matrix[0] == null || matrix[0].length == 0) return 0;
+    
+    int[][] directions = new int[4][];
+    directions[0] = new int[] { -1, 0 };
+    directions[1] = new int[] { 0, 1 };
+    directions[2] = new int[] { 1, 0 };
+    directions[3] = new int[] { 0, -1 };
+
+    int m = matrix.length;
+    int n = matrix[0].length;
+    int[][] cache = new int[m][n];
+    int res = 1;
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++) {
+            res = Math.max(res, findLongest(directions, matrix, i, j, cache));
+        }
+
+    return res;
+}
+
+private static int findLongest(int[][] directions, int[][] matrix, int r, int c, int[][] cache) {
+    if (cache[r][c] > 0) return cache[r][c];
+
+    cache[r][c] = 1;
+    for (int[] direction : directions) {
+        int i = r + direction[0];
+        int j = c + direction[1];
+        if (i < 0 || j < 0 || i == matrix.length || j == matrix[0].length || matrix[i][j] <= matrix[r][c]) continue;
+        cache[r][c] = Math.max(cache[r][c], 1 + findLongest(directions, matrix, i, j, cache));
+    }
+
+    return cache[r][c];
+}

@@ -1,0 +1,41 @@
+You are given an integer array nums and you have to return a new counts array. 
+The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
+Example: Given nums = [5, 2, 6, 1], Return the array [2, 1, 1, 0].
+
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        int[] res = new int[nums.length];
+        TreeNode node = null;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            node = insertBST(nums[i], i, 0, node, res);
+        }
+        return Arrays.stream(res).boxed().collect(Collectors.toList());
+    }
+    
+    public static TreeNode insertBST(int num, int i, int preSum, TreeNode node, int[] res) {
+        if (node == null) {
+            node = new TreeNode(num, 0);
+            res[i] = preSum;
+        } else if (num == node.val) {
+            node.dup++;
+            res[i] = preSum + node.numOfLeftChildren;
+        } else if (num < node.val) {
+            node.numOfLeftChildren++;
+            node.left = insertBST(num, i, preSum, node.left, res);
+        } else  {
+            node.right = insertBST(num, i, preSum + node.numOfLeftChildren + node.dup, node.right, res);
+        }
+        
+        return node;
+    }
+}
+
+class TreeNode {
+    public int val, dup, numOfLeftChildren;
+    public TreeNode left, right;
+    public TreeNode(int val, int numOfLeftChildren) {
+        this.val = val;
+        this.numOfLeftChildren = numOfLeftChildren;
+        this.dup = 1;
+    }
+}

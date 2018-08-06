@@ -1,0 +1,48 @@
+Given a string s and a non-empty string p, find all the start indices of p's anagrams in s.
+Strings consists of lowercase English letters only and the length of both strings s and p will not be larger than 20,100.
+The order of output does not matter.
+
+Example 1:
+Input: s: "cbaebabacd" p: "abc"
+Output: [0, 6]
+
+Example 2:
+Input: s: "abab" p: "ab"
+Output: [0, 1, 2]
+
+public List<Integer> findAnagrams(String s, String p) {
+    List<Integer> result = new ArrayList<Integer>();
+    if (s == null || p == null) return result;
+    if (s.length() < p.length()) return result;
+
+    HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+    for (int i = 0; i < p.length(); i++) {
+        char c = p.charAt(i);
+        map.put(c, map.getOrDefault(c, 0) + 1);
+    }
+
+    int counter = map.size();
+    int left = 0;
+    int right = 0;
+    while (right < s.length()) {
+        char cToAdd = s.charAt(right);
+        if (map.containsKey(cToAdd)) {
+            map.put(cToAdd, map.get(cToAdd) - 1);
+            if (map.get(cToAdd) == 0) counter--;
+        }
+        right++;
+
+        while (counter == 0) {
+            if (right - left == p.length()) result.add(left);
+
+            char cToDelete = s.charAt(left);
+            if (map.containsKey(cToDelete)) {
+                map.put(cToDelete, map.get(cToDelete) + 1);
+                if (map.get(cToDelete) > 0) counter++;
+            }
+            left++;
+        }
+    }
+
+    return result;
+}

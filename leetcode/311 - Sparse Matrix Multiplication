@@ -1,0 +1,33 @@
+Given two sparse matrices A and B, return the result of AB.
+You may assume that A's column number is equal to B's row number.
+Example:
+Input:
+A = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+B = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+Output:
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+AB = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |
+                  
+public int[][] multiply(int[][] a, int[][] b) {
+    int m = a.length;
+    int x = b.length;
+    int n = b[0].length;
+    int[][] res = new int[m][n];
+    for (int i = 0; i < m; i++)
+        for (int k = 0; k < x; k++) {
+            if (a[i][k] == 0) continue;
+            for (int j = 0; j < n; j++) {
+                if (b[k][j] != 0) res[i][j] += a[i][k] * b[k][j];
+            }
+        }
+
+    return res;
+}

@@ -1,0 +1,56 @@
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) return null;
+    if (root.val == key) return removeNode(root);
+    Queue<TreeNode> queue = new LinkedList<TreeNode>();
+    queue.add(root);
+    while (queue.size() > 0) {
+        TreeNode parent = queue.remove();
+        if (parent.left != null) {
+            if (parent.left.val == key) {
+                parent.left = removeNode(parent.left);
+                return root;
+            }
+            queue.add(parent.left);
+        }
+        if (parent.right != null) {
+            if (parent.right.val == key) {
+                parent.right = removeNode(parent.right);
+                return root;
+            }
+            queue.add(parent.right);
+        }
+    }
+    return root;
+}
+
+private static TreeNode removeNode(TreeNode node) {
+    if (node.left != null) {
+        TreeNode parent = null;
+        TreeNode t = node.left;
+        while (t.right != null) {
+            parent = t;
+            t = t.right;
+        }
+        if (parent != null) {
+            parent.right = t.left;
+            t.left = node.left;
+        }
+        t.right = node.right;
+        return t;
+    } else if (node.right != null) {
+        TreeNode parent = null;
+        TreeNode t = node.right;
+        while (t.left != null) {
+            parent = t;
+            t = t.left;
+        }
+        if (parent != null) {
+            parent.left = t.right;
+            t.right = node.right;
+        }
+        t.left = node.left;
+        return t;
+    } else {
+        return null;
+    }
+} 

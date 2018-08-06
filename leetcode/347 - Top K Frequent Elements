@@ -1,0 +1,36 @@
+Given a non-empty array of integers, return the k most frequent elements.
+For example, Given [1,1,1,2,2,3] and k = 2, return [1,2].
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ number of unique elements.
+Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+
+public List<Integer> topKFrequent(int[] nums, int k) {
+    HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+    for (int num : nums) {
+        if (!hm.containsKey(num)) hm.put(num, 0);
+        hm.put(num, hm.get(num) + 1);
+    }
+
+    TreeMap<Integer, List<Integer>> tm = new TreeMap<Integer, List<Integer>>(Collections.reverseOrder());
+    for (Map.Entry<Integer, Integer> entry : hm.entrySet()) {
+        int occurence = entry.getValue();
+        if (!tm.containsKey(occurence)) tm.put(occurence, new ArrayList<Integer>());
+        tm.get(occurence).add(entry.getKey());
+    }
+
+    List<Integer> result = new ArrayList<Integer>();
+    int i = 0;
+    for (Map.Entry<Integer, List<Integer>> entry : tm.entrySet()) {
+        boolean terminate = false;
+        for (Integer num : entry.getValue()) {
+            result.add(num);
+            if (++i == k) {
+                terminate = true;
+                break;
+            }
+        }
+        if (terminate) break;
+    }
+
+    return result;
+}

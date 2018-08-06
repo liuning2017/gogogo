@@ -1,0 +1,40 @@
+/**
+         * Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+
+        Example 1:
+        Input:nums = [1,1,1], k = 2
+        Output: 2
+        Note:
+        The length of the array is in range [1, 20,000].
+        The range of numbers in the array is [-1000, 1000] and the range of the integer k is [-1e7, 1e7].
+         **/
+        public static int SubarraySumEqualsK(int[] nums, int k)
+        {
+            Dictionary<int, int> map = new Dictionary<int, int>();
+            int sum = 0;
+            int cnt = 0;
+            for (int i = 0; i < nums.Length;  i++)
+            {
+                sum += nums[i];
+                if (sum == k) cnt++;
+
+                if (!map.ContainsKey(sum)) map.Add(sum, 0);
+                map[sum]++;
+
+                if (map.ContainsKey(sum - k)) cnt += map[sum - k];
+            }
+
+            return cnt;
+        }
+        
+        [TestMethod]
+        public void SubarraySumEqualsK()
+        {
+            var nums = new int[] { 1, 1, 1 };
+            Assert.AreEqual(2, ArrayAndString599.SubarraySumEqualsK(nums, 2));
+
+            nums = new int[] { 1, 4, 2, 2, 0, 1, 5, -1, -2, 20 };
+            Assert.AreEqual(6, ArrayAndString599.SubarraySumEqualsK(nums, 5));
+        }
+        
+        

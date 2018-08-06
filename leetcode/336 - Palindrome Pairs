@@ -1,0 +1,71 @@
+Given a list of unique words, find all pairs of distinct indices (i, j) in the given list, so that the concatenation of the two words, i.e. words[i] + words[j] is a palindrome.
+Example 1:
+Given words = ["bat", "tab", "cat"]
+Return [[0, 1], [1, 0]]
+The palindromes are ["battab", "tabbat"]
+Example 2:
+Given words = ["abcd", "dcba", "lls", "s", "sssll"]
+Return [[0, 1], [1, 0], [3, 2], [2, 4]]
+The palindromes are ["dcbaabcd", "abcddcba", "slls", "llssssll"]
+
+public List<List<Integer>> palindromePairs(String[] words) {
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    if (words == null || words.length < 2) return res;
+
+    int emptyWordIdx = -1;
+    HashMap<String, Integer> map = new HashMap<String, Integer>();
+    for (int i = 0; i < words.length; i++) {
+        if (words[i].length() > 0) map.put(words[i], i);
+        else emptyWordIdx = i;
+    }
+
+    List<Integer> selfPalins = new ArrayList<Integer>();
+    for (int i = 0; i < words.length; i++) {
+        String word = words[i];
+        if (word.length() == 0) continue;
+
+        for (int k = 0; k < word.length(); k++) {
+            String left = word.substring(0, k);
+            String right = word.substring(k);
+
+            if (isPalindrome(left)) {
+                String reversed = (new StringBuilder(right)).reverse().toString();
+                int j = map.getOrDefault(reversed, -1);
+                if (j != -1 && j != i)  addPair(res, j, i);
+            }
+
+            if (isPalindrome(right)) {
+                if (k == 0) {
+                    selfPalins.add(i);
+                    continue;
+                }
+                String reversed = (new StringBuilder(left)).reverse().toString();
+                int j = map.getOrDefault(reversed, -1);
+                if (j != -1 && j != i)  addPair(res, i, j);
+            }
+        }
+    }
+
+    if (emptyWordIdx != -1) {
+        for (int idx : selfPalins) {
+            addPair(res, emptyWordIdx, idx);
+            addPair(res, idx, emptyWordIdx);
+        }
+    }
+
+    return res;
+}
+
+private static boolean isPalindrome(String s) {
+    if (s.length() == 0) return true;
+    int i = 0, j = s.length() - 1;
+    while (i < j) {
+        if (s.charAt(i++) != s.charAt(j--)) return false;
+    }
+    return true;
+}
+
+private static void addPair(List<List<Integer>> res, int i, int j) {
+    List<Integer> list = new ArrayList<Integer>(Arrays.asList(i, j));
+    res.add(list);
+}
