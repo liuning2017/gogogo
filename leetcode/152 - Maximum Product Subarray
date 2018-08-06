@@ -1,0 +1,73 @@
+/**
+         * Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+        For example, given the array [2,3,-2,4],
+        the contiguous subarray [2,3] has the largest product = 6
+         **/
+        public static int MaxProduct(int[] nums)
+        {
+            int maxProduct = Int32.MinValue;
+            int product = 1;
+            int leftP = 1;
+            int lastNegativeIndex = -1;
+            int cnt = 0;
+
+            for (int i = 0; i <= nums.Length; i++)
+            {
+                if (i == nums.Length || nums[i] == 0)
+                {
+                    if (i < nums.Length)
+                    {
+                        maxProduct = Math.Max(maxProduct, 0);
+                    }
+
+                    if (cnt > 0)
+                    {
+                        if (product < 0 && cnt > 1)
+                        {
+                            int rightP = 1;
+                            for (int j = lastNegativeIndex; j < i; j++)
+                            {
+                                rightP *= nums[j];
+                            }
+
+                            product = leftP < rightP ? product / rightP : product / leftP;
+                        }
+                        maxProduct = Math.Max(maxProduct, product);
+                    }
+
+                    product = 1;
+                    leftP = 1;
+                    lastNegativeIndex = -1;
+                    cnt = 0;
+                }
+                else
+                {
+                    product *= nums[i];
+                    if (leftP > 0) leftP *= nums[i];
+                    if (nums[i] < 0) lastNegativeIndex = i;
+                    cnt++;
+                }
+            }
+
+            return maxProduct;
+        }
+        
+        [TestMethod]
+        public void MaxProduct()
+        {
+            int[] nums = new int[] { 2, 3, -2, 4};
+            Assert.AreEqual(6, ArrayAndString599.MaxProduct(nums));
+
+            nums = new int[] { 2, 3, -2, 4, 0, -2, 5, -3, -4 };
+            Assert.AreEqual(60, ArrayAndString599.MaxProduct(nums));
+
+            nums = new int[] { 1, -2, 3 };
+            Assert.AreEqual(3, ArrayAndString599.MaxProduct(nums));
+
+            nums = new int[] { -2 };
+            Assert.AreEqual(-2, ArrayAndString599.MaxProduct(nums));
+
+            nums = new int[] { 0 };
+            Assert.AreEqual(0, ArrayAndString599.MaxProduct(nums));
+        }
+        

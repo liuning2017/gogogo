@@ -1,0 +1,42 @@
+Given two strings s and t, determine if they are both one edit distance apart.
+Note: There are 3 possiblities to satisify one edit distance apart:
+Insert a character into s to get t
+Delete a character from s to get t
+Replace a character of s to get t
+
+Example 1: Input: s = "ab", t = "acb". Output: true
+Example 2: Input: s = "cab", t = "ad". Output: false
+Example 3: Input: s = "1203", t = "1213". Output: true
+
+public boolean isOneEditDistance(String s, String t) {
+    if (s == null || t == null) return false;
+    if (s.length() < t.length()) return isOneEditDistance(t, s);
+    if (s.length() - t.length() > 1) return false;
+
+    int n = t.length();
+    if (s.length() == n) {
+        boolean oneDiff = false;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) != t.charAt(i)) {
+                if (oneDiff) return false;
+                oneDiff = true;
+            }
+        }
+        return oneDiff;
+    } else {
+        int i = 0;
+        int j = 0;
+        boolean oneDiff = false;
+        while (j < n) {
+            if (s.charAt(i) != t.charAt(j)) {
+                if (oneDiff) return false;
+                oneDiff = true;
+                i++;
+            } else {
+                i++;
+                j++;
+            }
+        }
+        return true;
+    }
+}

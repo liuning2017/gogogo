@@ -1,0 +1,34 @@
+ public ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+        {
+            int lengthA = GetLinkedListLength(headA);
+            int lengthB = GetLinkedListLength(headB);
+            ListNode headLong = lengthA >= lengthB ? headA : headB;
+            ListNode headShort = lengthA < lengthB ? headA : headB;
+
+            int i = 0;
+            while (i < Math.Abs(lengthA - lengthB))
+            {
+                headLong = headLong.Next;
+                i++;
+            }
+
+            while (headLong != null)
+            {
+                if (headLong == headShort) return headLong;
+                headLong = headLong.Next;
+                headShort = headShort.Next;
+            }
+
+            return null;
+        }
+        private static int GetLinkedListLength(ListNode head)
+        {
+            int length = 0;
+            while (head != null)
+            {
+                length++;
+                head = head.Next;
+            }
+            return length;
+        }
+        

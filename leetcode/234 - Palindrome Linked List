@@ -1,0 +1,78 @@
+/**
+         * Given a singly linked list, determine if it is a palindrome.
+        Follow up: Could you do it in O(n) time and O(1) space?
+         **/
+        public static bool IsPalindrome(LinkedListNode head)
+        {
+            if (head == null) return true;
+
+            var slow = head;
+            var fast = head;
+            Stack<int> stack = new Stack<int>();
+            bool popOne = false;
+            while (true)
+            {
+                stack.Push(slow.Value);
+                slow = slow.Next;
+                fast = fast.Next;
+                if (fast == null)
+                {
+                    popOne = true;
+                    break;
+                }
+                fast = fast.Next;
+                if (fast == null) break;
+            }
+
+            if (popOne) stack.Pop();
+
+            while (slow != null)
+            {
+                if (slow.Value != stack.Pop()) return false;
+                slow = slow.Next;
+            }
+
+            return true;
+        }
+        
+        [TestMethod]
+        public void IsPalindrome()
+        {
+            var head = CreateLinkedList(new int[] { 1 });
+            Assert.IsTrue(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 1 });
+            Assert.IsTrue(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2 });
+            Assert.IsFalse(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2, 1 });
+            Assert.IsTrue(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2, 3, 3, 2, 1 });
+            Assert.IsTrue(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2, 3, 4, 3, 2, 1 });
+            Assert.IsTrue(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2, 3, 3, 7, 1 });
+            Assert.IsFalse(LinkedList.IsPalindrome(head));
+
+            head = CreateLinkedList(new int[] { 1, 2, 3, 4, 3, 7, 1 });
+            Assert.IsFalse(LinkedList.IsPalindrome(head));
+        }
+        
+        private static LinkedListNode CreateLinkedList(int[] nums)
+        {
+            var node = new LinkedListNode(nums[0]);
+            var head = node;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                var next = new LinkedListNode(nums[i]);
+                node.Next = next;
+                node = next;
+            }
+            return head;
+        }
+        

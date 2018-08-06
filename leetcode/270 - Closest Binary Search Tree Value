@@ -1,0 +1,19 @@
+public int closestValue(TreeNode root, double target) {
+      TreeNode node = root;
+      double minDiff = Double.MAX_VALUE;
+      int result = 0;
+
+      while (node != null) {
+          double diff = Math.abs(target - node.val);
+          if (diff < minDiff) {
+              result = node.val;
+              minDiff = diff;
+          }
+
+          if (target < node.val) node = node.left;
+          else node = node.right;
+      }
+
+      return result;
+  }
+    

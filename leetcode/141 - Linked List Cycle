@@ -1,0 +1,18 @@
+/**Given a linked list, determine if it has a cycle in it.**/
+        public bool HasCycle(ListNode head)
+        {
+            if (head == null) return false;
+            var slow = head;
+            var fast = head.Next;
+            while (fast != null)
+            {
+                if (slow == fast) return true;
+                slow = slow.Next;
+                fast = fast.Next;
+                if (fast == null) break;
+                fast = fast.Next;
+            }
+
+            return false;
+        }
+        

@@ -1,0 +1,97 @@
+/**
+         * Sort a linked list in O(n log n) time using constant space complexity.
+         **/
+        public static LinkedListNode SortList(LinkedListNode head)
+        {
+            if (head == null || head.Next == null) return head;
+
+            var slow = head;
+            var fast = head;
+            while (fast != null)
+            {
+                fast = fast.Next;
+                if (fast == null) break;
+                fast = fast.Next;
+                if (fast == null) break;
+                slow = slow.Next;
+            }
+
+            var head2 = SortList(slow.Next);
+            slow.Next = null;
+            var head1 = SortList(head);
+            return MergeSort(head1, head2);
+        }
+        private static LinkedListNode MergeSort(LinkedListNode head1, LinkedListNode head2)
+        {
+            LinkedListNode head = new LinkedListNode(0);
+            LinkedListNode node = head;
+            while (head1 != null && head2 != null)
+            {
+                if (head1.Value < head2.Value)
+                {
+                    node.Next = head1;
+                    head1 = head1.Next;
+                }
+                else
+                {
+                    node.Next = head2;
+                    head2 = head2.Next;
+                }
+
+                node = node.Next;
+            }
+
+            if (head1 != null) node.Next = head1;
+            else node.Next = head2;
+
+            return head.Next;
+        }
+        
+        [TestMethod]
+        public void SortList()
+        {
+            var head = CreateLinkedList(new int[] { 4, 1, 2, 5 });
+            var result = LinkedList.SortList(head);
+            VerifyLinkedList(result, new int[] { 1, 2, 4, 5 });
+
+            head = CreateLinkedList(new int[] { 4, 1, 2, 5, 3 });
+            result = LinkedList.SortList(head);
+            VerifyLinkedList(result, new int[] { 1, 2, 3, 4, 5 });
+
+            head = CreateLinkedList(new int[] { 3 });
+            result = LinkedList.SortList(head);
+            VerifyLinkedList(result, new int[] { 3 });
+
+            result = LinkedList.SortList(null);
+            VerifyLinkedList(result, null);
+        }
+
+        private static LinkedListNode CreateLinkedList(int[] nums)
+        {
+            var node = new LinkedListNode(nums[0]);
+            var head = node;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                var next = new LinkedListNode(nums[i]);
+                node.Next = next;
+                node = next;
+            }
+            return head;
+        }
+
+        private static void VerifyLinkedList(LinkedListNode head, int[] nums)
+        {
+            if (head == null)
+            {
+                Assert.IsTrue(nums == null || nums.Length == 0);
+                return;
+            }
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                Assert.IsNotNull(head);
+                Assert.AreEqual(nums[i], head.Value);
+                head = head.Next;
+            }
+        }
+        

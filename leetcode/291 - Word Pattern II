@@ -1,0 +1,32 @@
+Given a pattern and a string str, find if str follows the same pattern.
+Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty substring in str.
+Example 1: Input: pattern = "abab", str = "redblueredblue", Output: true
+Example 2: Input: pattern = pattern = "aaaa", str = "asdasdasdasd", Output: true
+Example 3: Input: pattern = "aabb", str = "xyzabcxzyabc", Output: false
+Notes: You may assume both pattern and str contains only lowercase letters.
+
+public boolean wordPatternMatch(String pattern, String str) {
+    HashMap<Character, String> map = new HashMap<Character, String>();
+    return match(pattern, 0, str, 0, map);
+}
+
+private static boolean match(String pattern, int i, String str, int j, HashMap<Character, String> map) {
+    if (i == pattern.length() && j == str.length()) return true;
+    if (i == pattern.length() || j == str.length()) return false;
+
+    char c = pattern.charAt(i);
+    if (map.containsKey(c)) {
+        String s = map.get(c);
+        if (!str.startsWith(s, j)) return false;
+        return match(pattern, i + 1, str, j + s.length(), map);
+    } else {
+        for (int k = j + 1; k <= str.length(); k++) {
+            String s = str.substring(j, k);
+            if (map.containsValue(s)) continue;
+            map.put(c, s);
+            if (match(pattern, i + 1, str, k, map)) return true;
+            map.remove(c);
+        }
+    }
+    return false;
+}

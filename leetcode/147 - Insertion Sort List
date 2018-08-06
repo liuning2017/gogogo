@@ -1,0 +1,27 @@
+Sort a linked list using insertion sort.
+
+public ListNode insertionSortList(ListNode head) {
+    ListNode dummy = new ListNode(0);
+    ListNode tail = dummy;
+    while (head != null) {
+        ListNode node = new ListNode(0);
+        node.next = head;
+        ListNode minNodePrev = null;
+        int minValue = Integer.MAX_VALUE;
+        while (node.next != null) {
+            if (node.next.val <= minValue) {
+                minValue = node.next.val;
+                minNodePrev = node;
+            }
+            node = node.next;
+        }
+
+        tail.next = minNodePrev.next;
+        minNodePrev.next = minNodePrev.next.next;
+        tail = tail.next;
+        if (tail == head) head = head.next;
+        tail.next = null;
+    }
+
+    return dummy.next;
+}

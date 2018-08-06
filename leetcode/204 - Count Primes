@@ -1,0 +1,26 @@
+ /**Count the number of prime numbers less than a non-negative number, n.**/
+        public int CountPrimes(int n)
+        {
+            if (n < 3) return 0;
+            if (n < 5) return n - 2;
+
+            List<int> primes = new List<int>();
+            for (int i = 3; i < n; i += 2)
+            {
+                var sqrt = Math.Sqrt(i);
+                bool isPrime = true;
+                foreach (int prime in primes)
+                {
+                    if (prime > sqrt) break;
+                    if (i % prime == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+                if (isPrime) primes.Add(i);
+            }
+
+            return primes.Count + 1;
+        }
+        

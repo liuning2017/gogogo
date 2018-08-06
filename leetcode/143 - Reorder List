@@ -1,0 +1,35 @@
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+You must do this in-place without altering the nodes' values.
+For example, Given {1,2,3,4}, reorder it to {1,4,2,3}.
+
+public void reorderList(ListNode head) {
+    if (head == null) return;
+
+    ListNode slow = head;
+    ListNode fast = head;
+    while (true) {      
+        fast = fast.next;
+        if (fast == null) break;
+        fast = fast.next;
+        if (fast == null) break;
+        slow = slow.next;
+    }
+    fast = slow;
+    slow = slow.next;
+    fast.next = null;
+
+    Stack<ListNode> stack = new Stack<ListNode>();
+    while (slow != null) {
+        stack.push(slow);
+        slow = slow.next;
+    }
+
+    ListNode t1 = head;
+    while (!stack.empty()) {
+        ListNode t2 = stack.pop();
+        t2.next = t1.next;
+        t1.next = t2;
+        t1 = t2.next;
+    }
+}

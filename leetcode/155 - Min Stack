@@ -1,0 +1,57 @@
+/**
+     * Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+        push(x) -- Push element x onto stack.
+        pop() -- Removes the element on top of the stack.
+        top() -- Get the top element.
+        getMin() -- Retrieve the minimum element in the stack.
+     **/
+    public class MinStack
+    {
+        Stack<int> stack;
+        Stack<int> mins;
+
+        public MinStack()
+        {
+            stack = new Stack<int>();
+            mins = new Stack<int>();
+        }
+
+        public void Push(int x)
+        {
+            stack.Push(x);
+            if (mins.Count == 0 || x < mins.Peek()) mins.Push(x);
+        }
+
+        public void Pop()
+        {
+            if (stack.Count == 0) throw new Exception();
+            int x = stack.Pop();
+            if (x == mins.Peek()) mins.Pop();
+        }
+
+        public int Top()
+        {
+            if (stack.Count == 0) throw new Exception();
+            return stack.Peek();
+        }
+
+        public int GetMin()
+        {
+            if (mins.Count == 0) throw new Exception();
+            return mins.Peek();
+        }
+    }
+    
+    [TestMethod]
+        public void MinStack()
+        {
+            MinStack minStack = new MinStack();
+            minStack.Push(-2);
+            minStack.Push(0);
+            minStack.Push(-3);
+            Assert.AreEqual(-3, minStack.GetMin());
+            minStack.Pop();
+            Assert.AreEqual(0, minStack.Top());
+            Assert.AreEqual(-2, minStack.GetMin());
+        }
+        

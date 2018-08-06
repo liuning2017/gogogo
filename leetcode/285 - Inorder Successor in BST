@@ -1,0 +1,23 @@
+Given a binary search tree and a node in it, find the in-order successor of that node in the BST.
+Note: If the given node has no in-order successor in the tree, return null.
+
+public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+    return findP(root, null, p.val);
+}
+
+private static TreeNode findP(TreeNode node, TreeNode prev, int target) {
+    if (node == null) return null;
+    if (node.val == target) {
+        if (node.right == null) {
+            return prev;
+        } else {
+            TreeNode successor = node.right;
+            while (successor.left != null) successor = successor.left;
+            return successor;
+        }
+    } else if (node.val > target) {
+        return findP(node.left, node, target);
+    } else {
+        return findP(node.right, prev, target);
+    }
+}

@@ -1,0 +1,23 @@
+public List<String> wordBreak(String s, List<String> wordDict) {
+  HashSet<String> dict = new HashSet<String>(wordDict);
+  List<String> result = new ArrayList<String>();
+  doWordBreak(s, dict, 0, new StringBuilder(), result);
+  return result;
+}
+
+private static void doWordBreak(String s, HashSet<String> dict, int start, StringBuilder sb, List<String> result) {
+  for (int i = start + 1; i <= s.length(); i++) {
+    String word = s.substring(start, i);
+    if (dict.contains(word)) {
+      StringBuilder newSb = new StringBuilder(sb);
+      newSb.append(word);
+      if (i == s.length()) {	
+        result.add(newSb.toString());
+      } else {
+        newSb.append(' ');
+        doWordBreak(s, dict, i, newSb, result);
+      }
+    }
+  }
+}
+  

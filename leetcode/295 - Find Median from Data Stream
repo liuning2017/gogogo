@@ -1,0 +1,130 @@
+namespace FinanceManage
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    /**
+        * Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. 
+        * So the median is the mean of the two middle value.
+    Examples: 
+    [2,3,4] , the median is 3
+    [2,3], the median is (2 + 3) / 2 = 2.5
+
+    Design a data structure that supports the following two operations:
+
+    void addNum(int num) - Add a integer number from the data stream to the data structure.
+    double findMedian() - Return the median of all elements so far.
+    For example:
+
+    addNum(1)
+    addNum(2)
+    findMedian() -> 1.5
+    addNum(3) 
+    findMedian() -> 2
+        **/
+    public class MedianFinder
+    {
+        private readonly SortedList<double, int> maxHeap;
+        private readonly SortedList<double, int> minHeap;
+
+        /** initialize your data structure here. */
+        public MedianFinder()
+        {
+            this.maxHeap = new SortedList<double, int>(new MaxHeapComparer());
+            this.minHeap = new SortedList<double, int>();
+        }
+
+        public void AddNum(int num)
+        {
+            if (this.maxHeap.Count == this.minHeap.Count)
+            {
+                if (this.maxHeap.Count == 0 || num <= this.minHeap.First().Value)
+                {
+                    AddToHeap(this.maxHeap, num);
+                }
+                else
+                {
+                    AddToHeap(this.maxHeap, this.minHeap.First().Value);
+                    this.minHeap.RemoveAt(0);
+                    AddToHeap(this.minHeap, num);
+                }
+            }
+            else
+            {
+                if (num >= this.maxHeap.First().Value)
+                {
+                    AddToHeap(this.minHeap, num);
+                }
+                else
+                {
+                    AddToHeap(this.minHeap, this.maxHeap.First().Value);
+                    this.maxHeap.RemoveAt(0);
+                    AddToHeap(this.maxHeap, num);
+                }
+            }
+        }
+
+        public double FindMedian()
+        {
+            if (this.maxHeap.Count == this.minHeap.Count)
+            {
+                double a = this.maxHeap.First().Value;
+                double b = this.minHeap.First().Value;
+                return (a + b) / 2;
+            }
+            else
+            {
+                return this.maxHeap.First().Value;
+            }
+        }
+
+        private static void AddToHeap(SortedList<double, int> heap, int num)
+        {
+            double key = num;
+            while (heap.ContainsKey(key))
+            {
+                key += 0.000001;
+            }
+            heap.Add(key, num);
+        }
+
+        private class MaxHeapComparer : IComparer<double>
+        {
+            public int Compare(double x, double y)
+            {
+                return y.CompareTo(x);
+            }
+        }
+    }
+}
+
+[TestMethod]
+        public void MedianFinder()
+        {
+            MedianFinder obj = new MedianFinder();
+            obj.AddNum(6);
+            Assert.AreEqual(6, obj.FindMedian());
+            obj.AddNum(10);
+            Assert.AreEqual(8, obj.FindMedian());
+            obj.AddNum(2);
+            Assert.AreEqual(6, obj.FindMedian());
+            obj.AddNum(6);
+            Assert.AreEqual(6, obj.FindMedian());
+            obj.AddNum(5);
+            Assert.AreEqual(6, obj.FindMedian());
+            obj.AddNum(0);
+            Assert.AreEqual(5.5, obj.FindMedian());
+            obj.AddNum(6);
+            Assert.AreEqual(6, obj.FindMedian());
+            obj.AddNum(3);
+            Assert.AreEqual(5.5, obj.FindMedian());
+            obj.AddNum(1);
+            Assert.AreEqual(5, obj.FindMedian());
+            obj.AddNum(0);
+            Assert.AreEqual(4, obj.FindMedian());
+            obj.AddNum(0);
+            Assert.AreEqual(3, obj.FindMedian());
+        }
+        

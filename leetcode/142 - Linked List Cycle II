@@ -1,0 +1,32 @@
+/**
+         * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+        Note: Do not modify the linked list.
+        Follow up: Can you solve it without using extra space?
+         **/
+        public LinkedListNode DetectCycle(LinkedListNode head)
+        {
+            var fast = head;
+            var slow = head;
+            while (fast != null)
+            {
+                fast = fast.Next;
+                if (fast == null) break;
+                fast = fast.Next;
+                slow = slow.Next;
+
+                if (fast == slow) break;
+            }
+
+            if (fast == null) return null;
+
+            fast = head;
+            while (fast != slow)
+            {
+                fast = fast.Next;
+                slow = slow.Next;
+            }
+
+            return fast;
+        }
+        
+        
