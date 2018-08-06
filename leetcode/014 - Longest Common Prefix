@@ -1,0 +1,29 @@
+/**Write a function to find the longest common prefix string among an array of strings.**/
+        public string LongestCommonPrefix(string[] strs)
+        {
+            if (strs == null || strs.Length == 0) return string.Empty;
+            if (strs.Length == 1) return strs[0];
+
+            int cnt = 0;
+            bool stop = false;
+            while (true)
+            {
+                if (cnt == strs[0].Length) break;
+                char c = strs[0][cnt];
+                for (int i = 1; i < strs.Length; i++)
+                {
+                    if (cnt == strs[i].Length || c != strs[i][cnt])
+                    {
+                        stop = true;
+                        break;
+                    }
+                }
+
+                if (stop) break;
+                cnt++;
+            }
+
+            if (cnt > 0) return strs[0].Substring(0, cnt);
+            else return string.Empty;
+        }
+        

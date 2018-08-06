@@ -1,0 +1,36 @@
+public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    if (candidates == null || candidates.length == 0) return res;
+    int[] combinations = new int[candidates.length];
+    findCombination(candidates, 0, target, combinations, res);
+    return res;
+}
+
+private static void findCombination(int[] candidates, int k, int sum, int[] combinations, List<List<Integer>> res) {
+    if (k == candidates.length) return;
+    int i = 0;
+    while (true) {
+        int remained = sum - candidates[k] * i;
+        if (remained == 0) {
+            combinations[k] = i;
+            addCombination(candidates, combinations, res);
+            combinations[k] = 0;
+            break;
+        } else if (remained > 0) {
+            combinations[k] = i;
+            findCombination(candidates, k + 1, remained, combinations, res);
+            combinations[k] = 0;
+        } else {
+            break;
+        }
+        i++;
+    } 
+}
+
+private static void addCombination(int[] candidates, int[] combinations, List<List<Integer>> res) {
+    List<Integer> list = new ArrayList<Integer>();
+    for (int i = 0; i < combinations.length; i++) {       
+        for (int j = 0; j < combinations[i]; j++) list.add(candidates[i]);
+    }
+    res.add(list);
+}

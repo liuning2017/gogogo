@@ -1,0 +1,20 @@
+public void connect(TreeLinkNode root) {        
+        TreeLinkNode currentHead = root;
+        while (currentHead != null) {
+            TreeLinkNode dummyHead = new TreeLinkNode(0);
+            TreeLinkNode node = dummyHead;
+            while (currentHead != null) {
+                if (currentHead.left != null) {
+                    node.next = currentHead.left;
+                    node = node.next;
+                }
+                if (currentHead.right != null) {
+                    node.next = currentHead.right;
+                    node = node.next;
+                }
+                currentHead = currentHead.next;
+            }
+            currentHead = dummyHead.next;
+        }
+    }
+    

@@ -1,0 +1,13 @@
+/**
+         * Given an array of integers, every element appears twice except for one. Find that single one.
+         **/
+        public int SingleNumber(int[] nums)
+        {
+            int result = 0;
+            foreach (var num in nums)
+            {
+                result ^= num;
+            }
+            return result;
+        }
+        

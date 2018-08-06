@@ -1,0 +1,42 @@
+/**
+         * Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, 
+         * find the area of largest rectangle in the histogram.
+         **/
+        public static int LargestRectangleArea(int[] heights)
+        {
+            int maxArea = 0;
+            var hList = heights.ToList();
+            hList.Add(0);
+            Stack<int> stack = new Stack<int>();
+            for (int i = 0; i < hList.Count; i++)
+            {
+                while (stack.Count > 0 && hList[stack.Peek()] > hList[i])
+                {
+                    int k = stack.Pop();
+                    int width = stack.Count == 0 ? i : i - stack.Peek() - 1;
+                    maxArea = Math.Max(maxArea, hList[k] * width);
+                }
+
+                stack.Push(i);
+            }
+
+            return maxArea;
+        }
+        
+        [TestMethod]
+        public void LargestRectangleArea()
+        {
+            int[] heights = new int[] { 1 };
+            Assert.AreEqual(1, ArrayAndString599.LargestRectangleArea(heights));
+
+            heights = new int[] { 2, 1, 5, 6, 2, 3 };
+            Assert.AreEqual(10, ArrayAndString599.LargestRectangleArea(heights));
+
+            heights = new int[] { 2, 3, 1, 1, 1, 1, 1, 1, 1, 1 };
+            Assert.AreEqual(10, ArrayAndString599.LargestRectangleArea(heights));
+
+            heights = new int[] { 2, 3, 2, 1 };
+            Assert.AreEqual(6, ArrayAndString599.LargestRectangleArea(heights));
+        }
+        
+        

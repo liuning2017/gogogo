@@ -1,0 +1,54 @@
+/**
+         * Given preorder and inorder traversal of a tree, construct the binary tree.
+        Note: You may assume that duplicates do not exist in the tree.
+         **/
+        public static TreeNode BuildTree(int[] preorder, int[] inorder)
+        {
+            if (preorder == null || preorder.Length == 0) return null;
+            return DoBuildTree(preorder, 0, preorder.Length - 1, inorder, 0, inorder.Length - 1);
+        }
+        private static TreeNode DoBuildTree(int[] preorder, int preStart, int preEnd,
+            int[] inorder, int inStart, int inEnd)
+        {
+            int value = preorder[preStart];
+            TreeNode node = new TreeNode(value);
+
+            int inRootIndex = -1;
+            for (inRootIndex = inStart; inRootIndex <= inEnd; inRootIndex++)
+            {
+                if (inorder[inRootIndex] == value) break;
+            }
+
+            int preLeftEndIndx = preStart;
+            if (inRootIndex > inStart)
+            {
+                preLeftEndIndx = inRootIndex - inStart + preStart;
+                node.Left = DoBuildTree(preorder, preStart + 1, preLeftEndIndx, inorder, inStart, inRootIndex - 1);
+            }
+
+            if (inRootIndex < inEnd)
+            {
+                node.Right = DoBuildTree(preorder, preLeftEndIndx + 1, preEnd, inorder, inRootIndex + 1, inEnd);
+            }
+
+            return node;
+        }
+        
+        [TestMethod]
+        public void BuildTree()
+        {
+            int[] preorder = new int[] { 1 };
+            int[] inorder = new int[] { 1 };
+            var root = TreeAndGraph.BuildTree(preorder, inorder);
+            Assert.AreEqual(1, root.Value);
+
+            preorder = new int[] { 1, 2, 4, 3, 7 };
+            inorder = new int[] { 4, 2, 1, 3, 7 };
+            root = TreeAndGraph.BuildTree(preorder, inorder);
+            Assert.AreEqual(1, root.Value);
+            Assert.AreEqual(2, root.Left.Value);
+            Assert.AreEqual(3, root.Right.Value);
+            Assert.AreEqual(4, root.Left.Left.Value);
+            Assert.AreEqual(7, root.Right.Right.Value);
+        }
+        

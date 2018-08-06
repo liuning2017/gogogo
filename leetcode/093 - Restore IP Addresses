@@ -1,0 +1,32 @@
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+Example: Input: "25525511135", Output: ["255.255.11.135", "255.255.111.35"]
+
+public List<String> restoreIpAddresses(String s) {
+    List<String> res = new ArrayList<String>();
+    if (s == null || s.length() < 4 || s.length() > 12) return res;
+    populateAddresses(s, 0, 3, "", res);
+    return res;
+}
+
+private static void populateAddresses(String s, int idx, int remaining, String prefix, List<String> res) {
+    if (remaining == 0) {
+        if (s.charAt(idx) == '0' && idx < s.length() - 1) return;
+        String section = s.substring(idx);
+        if (Integer.valueOf(section) < 256) res.add(prefix + section);
+        return;
+    }
+
+    if (s.charAt(idx) == '0') {
+        if (idx >= s.length() - remaining * 3 - 1) populateAddresses(s, idx + 1, remaining - 1, prefix + "0.", res);
+        return;
+    }
+
+    int start = Math.max(idx + 1, s.length() - remaining * 3);
+    int end = Math.min(idx + 3, s.length() - remaining);
+    for (int i = start; i <= end; i++) {
+        String section = s.substring(idx, i);
+        if (Integer.valueOf(section) < 256) {
+            populateAddresses(s, i, remaining - 1, prefix + section + ".", res);
+        }
+    }
+}

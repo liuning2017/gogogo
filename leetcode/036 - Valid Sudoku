@@ -1,0 +1,20 @@
+Determine if a Sudoku is valid, according to: Sudoku Puzzles - The Rules.
+The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+
+public boolean isValidSudoku(char[][] board) {
+    boolean[][] rowFlag = new boolean[9][9];
+    boolean[][] colFlag = new boolean[9][9];
+    boolean[][] boxFlag = new boolean[9][9];
+
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++) {
+            if (board[i][j] == '.') continue;
+            int k = board[i][j] - '1';
+            int boxIndex = i / 3 * 3 + j / 3;
+            if (rowFlag[i][k] || colFlag[j][k] || boxFlag[boxIndex][k]) return false;
+            rowFlag[i][k] = true;
+            colFlag[j][k] = true;
+            boxFlag[boxIndex][k] = true;
+        }
+    return true;
+}

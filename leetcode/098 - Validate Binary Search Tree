@@ -1,0 +1,9 @@
+public boolean isValidBST(TreeNode root) {
+    return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+
+private static boolean validate(TreeNode node, long min, long max) {
+    if (node == null) return true;
+    if ((long)node.val <= min || (long)node.val >= max) return false;
+    return validate(node.left, min, node.val) && validate(node.right, node.val, max);
+}

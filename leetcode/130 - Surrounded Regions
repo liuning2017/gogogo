@@ -1,0 +1,42 @@
+public void solve(char[][] board) {
+        if (board == null || board.length == 0 || board[0].length == 0) return;
+        
+        final int[][] directions = new int[4][];
+        directions[0] = new int[]{-1, 0};
+        directions[1] = new int[]{0, 1};
+        directions[2] = new int[]{1, 0};
+        directions[3] = new int[]{0, -1};
+        
+        int m =  board.length;
+        int n =  board[0].length;
+        
+        for (int i = 0; i < m; i++) markBorderElement(board, i, 0, directions);
+        for (int i = 0; i < m; i++) markBorderElement(board, i, n - 1, directions);
+        for (int j = 0; j < n; j++) markBorderElement(board, 0, j, directions);
+        for (int j = 0; j < n; j++) markBorderElement(board, m - 1, j, directions);
+        
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') board[i][j] = 'X';
+            }
+        
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'B') board[i][j] = 'O';
+            }
+    }
+    
+    private static void markBorderElement(char[][] board, int i, int j, final int[][] directions) {
+        if (board[i][j] == 'O') markBorderRegion(board, i, j, directions);
+    }
+    
+    private static void markBorderRegion(char[][] board, int r, int c, final int[][] directions) {
+        if (r < 0 || r > board.length - 1 || c < 0 || c > board[0].length - 1) return;
+        if (board[r][c] != 'O') return;
+        
+        board[r][c] = 'B';
+        for (int[] direction : directions) {
+            markBorderRegion(board, r + direction[0], c + direction[1], directions);
+        }
+    }
+    

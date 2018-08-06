@@ -1,0 +1,36 @@
+ public int myAtoi(String str) {
+        // write your code here
+        
+        if (str == null) return 0;
+        str = str.trim();
+        if (str.length() == 0) return 0;
+        
+        int flag = 1;
+        int i = 0;
+        if (str.charAt(0) == '-') {
+            flag = -1;
+            i = 1;
+        }
+        if (str.charAt(0) == '+') i = 1;
+        
+        long result = 0;
+        while (i < str.length()) {
+            char c = str.charAt(i);
+            i++;
+            
+            if (c >= '0' && c <= '9') {
+                result = result * 10 + c - '0';
+                if (result == Integer.MAX_VALUE) return Integer.MAX_VALUE * flag;
+                else if (result > Integer.MAX_VALUE) {
+                    if (flag == 1) return Integer.MAX_VALUE;
+                    else return Integer.MIN_VALUE;
+                }
+            } else {
+                if (result == 0) return 0;
+                break;
+            }
+        }
+        
+        return (int)result * flag;
+    }
+    

@@ -1,0 +1,49 @@
+Given an integer, convert it to a roman numeral. Input is guaranteed to be within the range from 1 to 3999.
+
+public String intToRoman(int num) {
+    HashMap<Integer, Character> hm = new HashMap<Integer, Character>();
+    hm.put(1, 'I');
+    hm.put(5, 'V');
+    hm.put(10, 'X');
+    hm.put(50, 'L');
+    hm.put(100, 'C');
+    hm.put(500, 'D');
+    hm.put(1000, 'M');
+    hm.put(5000, 'M'); // dummy
+    hm.put(10000, 'M'); // dummy
+
+    StringBuilder sb = new StringBuilder();
+    int start = 1000;
+    while (num > 0) {
+        getSubRoman(sb, num / start, hm.get(start), hm.get(start * 5), hm.get(start * 10));
+        num %= start;
+        start /= 10;
+    }
+
+    return sb.toString();
+}
+
+// 1 ~ 9: I, V, X
+// 10 ~ 90: X, L, C
+// 100 ~ 900: C, D, M
+// num is <= 9
+private void getSubRoman(StringBuilder sb, int num, char start, char mid, char end) {
+    if (num == 0) {
+        return;
+    } else if (num <= 3) {
+        getSmallSub(sb, start, num);
+    } else if (num == 4) {
+        sb.append(start);
+        sb.append(mid);
+    } else if (num <= 8) {
+        sb.append(mid);
+        getSmallSub(sb, start, num - 5);
+    } else {
+        sb.append(start);
+        sb.append(end);
+    }
+}
+
+private void getSmallSub(StringBuilder sb, char start, int k) {
+    for (int i = 0; i < k; i++) sb.append(start);
+}

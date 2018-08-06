@@ -1,0 +1,36 @@
+public static IList<int> InorderTraversalNoRecursion(TreeNode root)
+        {
+            List<int> result = new List<int>();
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            var node = root;
+            while (true)
+            {
+                while (node != null)
+                {
+                    stack.Push(node);
+                    node = node.Left;
+                }
+
+                if (stack.Count == 0) break;
+                node = stack.Pop();
+                result.Add(node.Value);
+                node = node.Right;
+            }
+
+            return result;
+        }
+        
+        public static IList<int> InorderTraversal(TreeNode root)
+        {
+            List<int> result = new List<int>();
+            DoInorderTraversal(root, result);
+            return result;
+        }
+        private static void DoInorderTraversal(TreeNode node, List<int> result)
+        {
+            if (node == null) return;
+            DoInorderTraversal(node.Left, result);
+            result.Add(node.Value);
+            DoInorderTraversal(node.Right, result);
+        }
+        

@@ -1,0 +1,55 @@
+Validate if a given string is numeric.
+Some examples:
+"0" => true
+" 0.1 " => true
+"abc" => false
+"1 a" => false
+"2e10" => true
+10e5.4 => false
+/*
+Ignore the leading and trailing white spaces.
+Ignore the ‘+’, ‘-‘ and’.’ at the start.
+Ensure that the characters in the string belong to {+, -, ., e, [0-9]}
+Ensure that no ‘.’ comes after ‘e’.
+A dot character ‘.’ should be followed by a digit.
+The character ‘e’ should be followed either by ‘+’, ‘-‘, or a digit. 
+*/
+public boolean isNumber(String s) {
+    if (s == null) return false;
+    s = s.trim();
+    if (s.length() == 0) return false;
+    if (s.length() == 1 && !isDigit(s.charAt(0))) return false;
+
+    boolean seenE = false;
+    boolean seenDot = false;
+    for (int i = 0; i < s.length(); i++) {
+        char c = s.charAt(i);
+        if (isDigit(c)) {
+            continue;
+        } else if (c == '+' || c == '-') {
+            if (i > 0 && s.charAt(i - 1) != 'e') return false;    
+            if (i == s.length() - 1) return false;
+        } else if (c == '.') {
+            if (seenE || seenDot) return false;
+            if (i == s.length() - 1 && !isDigit(s.charAt(i - 1))) return false;
+            seenDot = true;
+        } else if (c == 'e') {
+            if (seenE) return false;
+            if (i == s.length() - 1 || i == 0) return false;
+            if (!isDigit(s.charAt(i - 1)) && s.charAt(i - 1) != '.') return false;
+            if (s.charAt(i - 1) == '.') {
+                if (i < 2) return false;
+                if (!isDigit(s.charAt(i - 2))) return false;
+            }
+            seenE = true;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+private boolean isDigit(char c) {
+    return (c >= '0' && c <= '9');
+}

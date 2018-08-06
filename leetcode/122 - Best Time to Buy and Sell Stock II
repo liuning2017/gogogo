@@ -1,0 +1,29 @@
+/**
+         * Say you have an array for which the ith element is the price of a given stock on day i.
+        Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). 
+        However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+         **/
+        public int MaxProfit(int[] prices)
+        {
+            if (prices == null || prices.Length == 0) return 0;
+            int profit = 0;
+
+            var priceList = prices.ToList();
+            priceList.Add(0);
+            Stack<int> stack = new Stack<int>();
+            foreach (var price in priceList)
+            {
+                if (stack.Count != 0 && price < stack.Peek())
+                {
+                    int sell = stack.Pop();
+                    int buy = sell;
+                    while (stack.Count > 0) buy = stack.Pop();
+                    profit += (sell - buy);
+                }
+
+                stack.Push(price);
+            }
+
+            return profit;
+        }
+        

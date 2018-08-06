@@ -1,0 +1,62 @@
+/**
+         * Given a binary tree, flatten it to a linked list in-place.
+        For example, given
+
+                 1
+                / \
+               2   5
+              / \   \
+             3   4   6
+        The flattened tree should look like:
+           1
+            \
+             2
+              \
+               3
+                \
+                 4
+                  \
+                   5
+                    \
+                     6
+         **/
+        public static void Flatten(TreeNode root)
+        {
+            TreeNode tail = new TreeNode(0);
+            DoFlatten(root, ref tail);
+        }
+
+        private static void DoFlatten(TreeNode node, ref TreeNode tail)
+        {
+            if (node == null) return;
+            tail.Right = node;
+            tail = node;
+
+            var originalRight = node.Right;
+            DoFlatten(node.Left, ref tail);
+            node.Left = null;
+            DoFlatten(originalRight, ref tail);
+        }
+        
+        [TestMethod]
+        public void Flatten()
+        {
+            TreeNode root = new TreeNode(1);
+            root.Left = new TreeNode(2);
+            TreeAndGraph.Flatten(root);
+            Assert.AreEqual(1, root.Value);
+            Assert.IsNull(root.Left);
+            Assert.IsNotNull(root.Right);
+            Assert.AreEqual(2, root.Right.Value);
+
+            root = new TreeNode(1);
+            root.Left = new TreeNode(2);
+            root.Right = new TreeNode(3);
+            TreeAndGraph.Flatten(root);
+            Assert.AreEqual(1, root.Value);
+            Assert.IsNull(root.Left);
+            Assert.AreEqual(2, root.Right.Value);
+            Assert.IsNull(root.Right.Left);
+            Assert.AreEqual(3, root.Right.Right.Value);
+        }
+        

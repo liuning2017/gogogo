@@ -1,0 +1,34 @@
+/**
+         * Given a digit string, return all possible letter combinations that the number could represent.
+         * Note: Although the above answer is in lexicographical order, your answer could be in any order you want.
+         **/
+        public static IList<string> PhoneLetterCombinations(string digits)
+        {
+            Dictionary<char, string> phone = new Dictionary<char, string>();
+            phone.Add('2', "abc");
+            phone.Add('3', "def");
+            phone.Add('4', "ghi");
+            phone.Add('5', "jkl");
+            phone.Add('6', "mno");
+            phone.Add('7', "pqrs");
+            phone.Add('8', "tuv");
+            phone.Add('9', "wxyz");
+            phone.Add('0', " ");
+
+            IList<string> result = new List<string>();
+            if (digits == null || digits.Length == 0) return result;
+            DoPhoneLetterCombinations(digits, 0, string.Empty, phone, result);
+
+            return result;
+        }
+        private static void DoPhoneLetterCombinations(string digits, int index, string s, Dictionary<char, string> phone, IList<string> result)
+        {
+            string letters = phone[digits[index]];
+            foreach(char c in letters)
+            {
+                var sNew = s + c;
+                if (sNew.Length == digits.Length) result.Add(sNew);
+                else DoPhoneLetterCombinations(digits, index + 1, sNew, phone, result);
+            }
+        }
+        

@@ -1,0 +1,82 @@
+/**
+         * Merge k sorted linked lists and return it as one sorted list. 
+         **/
+        public static ListNode MergeKLists(ListNode[] lists)
+        {
+            SortedList<double, ListNode> map = new SortedList<double, ListNode>();
+            foreach (ListNode t in lists)
+            {
+                AddToSortedList(map, t);
+            }
+
+            ListNode head = new ListNode(0);
+            var node = head;
+            while (map.Count > 0)
+            {
+                var t = map.First().Value;
+                node.Next = t;
+                node = node.Next;
+
+                map.RemoveAt(0);
+                AddToSortedList(map, t.Next);
+            }
+
+            return head.Next;
+        }
+
+        private static void AddToSortedList(SortedList<double, ListNode> map, ListNode t)
+        {
+            if (t != null)
+            {
+                double key = t.Value;
+                while (map.ContainsKey(key)) key += 0.00001;
+                map.Add(key, t);
+            }
+        }
+        
+        [TestMethod]
+        public void MergeKLists()
+        {
+            var h1 = CreateLinkedList(new int[] { 3, 5 });
+            var h2 = CreateLinkedList(new int[] { 1, 8 });
+            var h3 = CreateLinkedList(new int[] { 2, 6 });
+            ListNode[] lists = new ListNode[] { h1, h2, h3 };
+            var result = LinkedList.MergeKLists(lists);
+            VerifyLinkedList(result, new int[] { 1, 2, 3, 5, 6, 8 });
+
+            h1 = CreateLinkedList(new int[] { 1, 2, 2 });
+            h2 = CreateLinkedList(new int[] { 1, 1, 2 });
+            lists = new ListNode[] { h1, h2 };
+            result = LinkedList.MergeKLists(lists);
+            VerifyLinkedList(result, new int[] { 1, 1, 1, 2, 2, 2 }); 
+        }
+
+        private static ListNode CreateLinkedList(int[] nums)
+        {
+            var node = new ListNode(nums[0]);
+            var head = node;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                var next = new ListNode(nums[i]);
+                node.Next = next;
+                node = next;
+            }
+            return head;
+        }
+
+        private static void VerifyLinkedList(ListNode head, int[] nums)
+        {
+            if (head == null)
+            {
+                Assert.IsTrue(nums == null || nums.Length == 0);
+                return;
+            }
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                Assert.IsNotNull(head);
+                
+                Assert.AreEqual(nums[i], head.Value);
+                head = head.Next;
+            }
+        }

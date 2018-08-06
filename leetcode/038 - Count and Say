@@ -1,0 +1,45 @@
+/**
+         * The count-and-say sequence is the sequence of integers with the first five terms as following:
+        1.     1
+        2.     11
+        3.     21
+        4.     1211
+        5.     111221
+        Given an integer n, generate the nth term of the count-and-say sequence.
+        Note: Each term of the sequence of integers will be represented as a string.
+        Example 1: Input: 1, Output: "1"
+        Example 2: Input: 4, Output: "1211"
+         **/
+        public static string CountAndSay(int n)
+        {
+            string lastSay = "1";
+            int i = 2;
+            while (i <= n)
+            {
+                StringBuilder sb = new StringBuilder();
+                int cnt = 0;
+                char lastChar = '0';
+                foreach (char c in lastSay)
+                { 
+                    if (c != lastChar)
+                    {
+                        sb.Append(cnt.ToString());
+                        sb.Append(lastChar);
+                        lastChar = c;
+                        cnt = 1;
+                    }
+                    else
+                    {
+                        cnt++;
+                    }
+                }
+
+                sb.Append(cnt.ToString());
+                sb.Append(lastChar);
+                lastSay = sb.ToString().Substring(2);
+                i++;
+            }
+
+            return lastSay;
+        }
+        

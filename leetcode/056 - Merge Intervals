@@ -1,0 +1,43 @@
+Given a collection of intervals, merge all overlapping intervals.
+For example,
+Given [1,3],[2,6],[8,10],[15,18],
+return [1,6],[8,10],[15,18].
+
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+        List<Interval> result = new ArrayList<Interval>();
+        if (intervals == null || intervals.size() == 0) return result;
+        
+        intervals.sort(new IntervalComparator());
+        int currentStart = intervals.get(0).start;
+        int currentEnd = intervals.get(0).end;
+        for (int i = 1; i < intervals.size(); i++) {
+            Interval interval = intervals.get(i);
+            if (interval.start > currentEnd) {
+                result.add(new Interval(currentStart, currentEnd));
+                currentStart = interval.start;
+            }
+            
+            currentEnd = Math.max(currentEnd, interval.end);
+        }
+        
+        result.add(new Interval(currentStart, currentEnd));
+        return result;
+    }
+}
+
+class IntervalComparator implements Comparator<Interval> {
+	@Override
+	public int compare(Interval n1, Interval n2) {
+		return n1.start - n2.start;
+	}
+}

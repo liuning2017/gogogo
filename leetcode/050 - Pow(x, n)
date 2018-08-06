@@ -1,0 +1,21 @@
+/**
+         * Implement pow(x, n).
+        Example 1: Input: 2.00000, 10, Output: 1024.00000
+        Example 2: Input: 2.10000, 3, Output: 9.26100
+         **/
+        public double MyPow(double x, int n)
+        {
+            if (x == 0 || x == 1) return x;
+            if (x == -1) return n % 2 == 0 ? 1 : -1;
+            if (n == Int32.MinValue) return 0;
+            if (n < 0) return 1 / MyPow(x, n * -1);
+            return DoMyPow(x, n);
+        }
+        private static double DoMyPow(double x, int n)
+        {
+            if (n == 0) return 1;
+            double half = DoMyPow(x, n / 2);
+            double a = n % 2 == 0 ? 1 : x;
+            return half * half * a;
+        }
+        
