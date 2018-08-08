@@ -14,30 +14,30 @@ return [1,6],[8,10],[15,18].
  */
 class Solution {
     public List<Interval> merge(List<Interval> intervals) {
-        List<Interval> result = new ArrayList<Interval>();
-        if (intervals == null || intervals.size() == 0) return result;
+        if (intervals == null || intervals.size() == 0) return intervals;
         
-        intervals.sort(new IntervalComparator());
+        List<Interval> res = new ArrayList<Interval>();
+        Collections.sort(intervals, new IntervalComparator());
         int currentStart = intervals.get(0).start;
         int currentEnd = intervals.get(0).end;
-        for (int i = 1; i < intervals.size(); i++) {
-            Interval interval = intervals.get(i);
+        for (Interval interval : intervals) {
             if (interval.start > currentEnd) {
-                result.add(new Interval(currentStart, currentEnd));
+                res.add(new Interval(currentStart, currentEnd));
                 currentStart = interval.start;
+                currentEnd = interval.end;
+            } else if (interval.end > currentEnd) {
+                currentEnd = interval.end;
             }
-            
-            currentEnd = Math.max(currentEnd, interval.end);
         }
         
-        result.add(new Interval(currentStart, currentEnd));
-        return result;
+        res.add(new Interval(currentStart, currentEnd));
+        return res;
     }
+    
 }
 
 class IntervalComparator implements Comparator<Interval> {
-	@Override
-	public int compare(Interval n1, Interval n2) {
-		return n1.start - n2.start;
-	}
+    public int compare(Interval interval1, Interval interval2) {
+        return interval1.start - interval2.start;
+    }
 }
