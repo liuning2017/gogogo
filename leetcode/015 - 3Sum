@@ -23,11 +23,7 @@ public List<List<Integer>> threeSum(int[] nums) {
             int left = nums[i];
             int right = nums[j];
             if (left + right == target) {
-                List<Integer> triplet = new ArrayList<Integer>();
-                triplet.add(nums[k]);
-                triplet.add(left);
-                triplet.add(right);
-                res.add(triplet);
+                res.add(Arrays.asList(nums[k], left, right));
                 while (i < j && nums[i] == left) i++;
                 while (i < j && nums[j] == right) j--;
             } else if (left + right < target) {
