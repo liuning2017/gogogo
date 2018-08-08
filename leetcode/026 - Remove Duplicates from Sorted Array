@@ -1,26 +1,20 @@
-/**
-         * Given a sorted array, remove the duplicates in-place such that each element appear only once and return the new length.
-        Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
-         **/
-        public int RemoveDuplicates(int[] nums)
-        {
-            if (nums == null || nums.Length < 1) return 0;
+Given a sorted array, remove the duplicates in-place such that each element appear only once and return the new length.
+Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
 
-            int cnt = 0;
-            int lastNum = nums[0] - 1;
-            for (int i = 0; i < nums.Length; i++)
-            {
-                if (nums[i] != lastNum)
-                {
-                    lastNum = nums[i];
-                    if (cnt > 0) nums[i - cnt] = nums[i];
-                }
-                else
-                {
-                    cnt++;
-                }
-            }
+public int removeDuplicates(int[] nums) {
+    if (nums == null || nums.length == 0) return 0;
+    if (nums.length == 1) return 1;
 
-            return nums.Length - cnt;
+    int current = nums[0];
+    int cnt = 0;
+    for (int i = 1; i < nums.length; i++) {
+        if (nums[i] == current) {
+            cnt++;
+        } else {
+            if (cnt > 0) nums[i - cnt] = nums[i];
+            current = nums[i];
         }
-        
+    }
+
+    return nums.length - cnt;
+}
