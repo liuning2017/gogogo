@@ -1,65 +1,41 @@
 public List<List<String>> solveNQueens(int n) {
     List<List<String>> res = new ArrayList<List<String>>();
-    boolean[][] board = new boolean[n][n];
-    placeQueen(board, n, 0, res);
+    int[] cols = new int[n];
+    place(cols, 0, res);
     return res;
 }
 
-private static void placeQueen(boolean[][] board, int n, int r, List<List<String>> res) {
-    if (r == n) {
-        res.add(generateSolution(board, n));
-        return;    
+private static void place(int[] cols, int r, List<List<String>> res) {
+    if (r == cols.length) {
+        addToResult(cols, res);
+        return;
     }
 
-    for (int j = 0; j < n; j++) {
-        if (canPlace(board, n, r, j)) {
-            board[r][j] = true;
-            placeQueen(board, n, r + 1, res);
-            board[r][j] = false;
+    for (int j = 0; j < cols.length; j++) {
+        if (isValid(cols, r, j)) {
+            cols[r] = j;
+            place(cols, r + 1, res);
         }
     }
 }
 
-private static boolean canPlace(boolean[][] board, int n, int r, int c) {
+private static boolean isValid(int[] cols, int r, int c) {
     for (int i = 0; i < r; i++) {
-        if (board[i][c]) return false;
-        if (c - (r - i) >= 0 && board[i][c - (r - i)]) return false;
-        if (c + (r - i) < n && board[i][c + (r - i)]) return false;
+        if (cols[i] == c || cols[i] == c - r + i || cols[i] == c + r - i) return false;
     }
     return true;
 }
 
-private static List<String> generateSolution(boolean[][] board, int n) {
+private static void addToResult(int[] cols, List<List<String>> res) {
     List<String> list = new ArrayList<String>();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < cols.length; i++) {
         StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < n; j++) {
-            if (board[i][j]) sb.append('Q');
-            else sb.append('.');
+        for (int j = 0; j < cols.length; j++) {
+            if (j != cols[i]) sb.append('.');
+            else sb.append('Q');
         }
         list.add(sb.toString());
     }
-    return list;
-}
 
-public int totalNQueens(int n) {
-    int[] res = new int[1];
-    boolean[][] board = new boolean[n][n];
-    placeQueen(board, n, 0, res);
-    return res[0];
-}
-
-private static void placeQueen(boolean[][] board, int n, int r, int[] res) {
-    if (r == n) {
-        res[0]++;
-        return;    
-    }
-
-    for (int j = 0; j < n; j++) {
-        if (canPlace(board, n, r, j)) {
-            board[r][j] = true;
-            placeQueen(board, n, r + 1, res);
-            board[r][j] = false;
-        }
-    }
+    res.add(list);
 }
