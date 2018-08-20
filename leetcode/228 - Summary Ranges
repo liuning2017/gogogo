@@ -7,24 +7,16 @@ public List<String> summaryRanges(int[] nums) {
     if (nums == null || nums.length == 0) return res;
 
     int start = 0;
-    int i = 1;
-    while (i < nums.length) {
-        if ((long)nums[i] - (long)nums[i - 1] > 1) {
-            appendRange(nums, start, i, res);
-            start = i;
-        }
-        i++;
+    for (int i = 1; i < nums.length; i++) {
+        if (nums[i] - nums[i - 1] == 1) continue;
+        res.add(generateRange(nums, start, i - 1));
+        start = i;
     }
-    appendRange(nums, start, i, res);
-
+    res.add(generateRange(nums, start, nums.length - 1));
     return res;
 }
 
-private void appendRange(int[] nums, int start, int i, List<String> res) {
-    StringBuilder sb = new StringBuilder(String.valueOf(nums[start]));
-    if (i - 1 > start) {
-        sb.append("->");
-        sb.append(nums[i - 1]);
-    }
-    res.add(sb.toString());
+private static String generateRange(int[] nums, int start, int end) {
+    if (start == end) return String.valueOf(nums[start]);
+    return String.valueOf(nums[start]) + "->" + String.valueOf(nums[end]);
 }
