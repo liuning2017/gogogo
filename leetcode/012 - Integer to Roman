@@ -1,49 +1,92 @@
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, two is written as II in Roman numeral, just two one's added together. Twelve is written as, XII, which is simply X + II. The number twenty seven is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
 Given an integer, convert it to a roman numeral. Input is guaranteed to be within the range from 1 to 3999.
 
+Example 1:
+Input: 3
+Output: "III"
+
+Example 2:
+Input: 4
+Output: "IV"
+
+Example 3:
+Input: 9
+Output: "IX"
+Example 4:
+
+Input: 58
+Output: "LVIII"
+Explanation: C = 100, L = 50, XXX = 30 and III = 3.
+Example 5:
+
+Input: 1994
+Output: "MCMXCIV"
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+
 public String intToRoman(int num) {
-    HashMap<Integer, Character> hm = new HashMap<Integer, Character>();
-    hm.put(1, 'I');
-    hm.put(5, 'V');
-    hm.put(10, 'X');
-    hm.put(50, 'L');
-    hm.put(100, 'C');
-    hm.put(500, 'D');
-    hm.put(1000, 'M');
-    hm.put(5000, 'M'); // dummy
-    hm.put(10000, 'M'); // dummy
-
-    StringBuilder sb = new StringBuilder();
-    int start = 1000;
-    while (num > 0) {
-        getSubRoman(sb, num / start, hm.get(start), hm.get(start * 5), hm.get(start * 10));
-        num %= start;
-        start /= 10;
+        HashMap<Integer, Character> hm = new HashMap<Integer, Character>();
+        hm.put(1, 'I');
+        hm.put(5, 'V');
+        hm.put(10, 'X');
+        hm.put(50, 'L');
+        hm.put(100, 'C');
+        hm.put(500, 'D');
+        hm.put(1000, 'M');
+        hm.put(5000, ' '); // dummy
+        hm.put(10000, ' '); // dummy
+        
+        String res = "";
+        int factor = 10;
+        while (factor <= 10000) {
+            int a = num % factor;
+            res = buildRoman(hm, factor, a) + res;
+            num = num - a;
+            factor *= 10;
+        }
+        
+        return res;
     }
-
-    return sb.toString();
-}
-
-// 1 ~ 9: I, V, X
-// 10 ~ 90: X, L, C
-// 100 ~ 900: C, D, M
-// num is <= 9
-private void getSubRoman(StringBuilder sb, int num, char start, char mid, char end) {
-    if (num == 0) {
-        return;
-    } else if (num <= 3) {
-        getSmallSub(sb, start, num);
-    } else if (num == 4) {
-        sb.append(start);
-        sb.append(mid);
-    } else if (num <= 8) {
-        sb.append(mid);
-        getSmallSub(sb, start, num - 5);
-    } else {
-        sb.append(start);
-        sb.append(end);
+    
+    private static String buildRoman(HashMap<Integer, Character> hm, int factor, int num) {
+        int a10 = factor;
+        int a5 = factor / 2;
+        int a1 = factor / 10;
+        char high = hm.get(a10);
+        char mid = hm.get(a5);
+        char low = hm.get(a1);
+        
+        StringBuilder sb = new StringBuilder();
+        if (num == a10 - a1) { // 9
+            sb.append(low);
+            sb.append(high);
+        } else if (num == a5 - a1) { // 4
+            sb.append(low);
+            sb.append(mid);
+        } else { // 8 7 6 5 3 2 1 0
+            if (num >= a5) sb.append(mid);
+            num %= a5;
+            while (num > 0) {
+                sb.append(low);
+                num -= a1;
+            }
+        }
+        
+        return sb.toString();
     }
-}
-
-private void getSmallSub(StringBuilder sb, char start, int k) {
-    for (int i = 0; i < k; i++) sb.append(start);
-}
