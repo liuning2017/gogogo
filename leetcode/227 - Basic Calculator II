@@ -48,3 +48,54 @@ public int calculate(String s) {
 
     return num;
 }
+
+
+public int calculate(String s) {
+    if (s == null || s.length() == 0) return 0;
+
+    s = s + "#";
+    Queue<Integer> q1 = new LinkedList<Integer>();
+    Queue<Character> q2 = new LinkedList<Character>();
+    int op1 = 0;
+    int op2 = 0;
+    char operator = '#';
+    int i = 0;
+    while (i < s.length()) {
+        char c = s.charAt(i++);
+        if (c == ' ') continue;
+
+        if (c == '+' || c == '-' || c == '#') {
+            if (operator != '#') {
+                if (operator == '*') op1 = op1 * op2;
+                else op1 = op1 / op2;
+                operator = '#';
+                op2 = 0;
+            }
+
+            q1.add(op1);
+            op1 = 0;
+            q2.add(c);
+        } else if (c == '*' || c == '/') {
+            if (operator != '#') {
+                if (operator == '*') op1 = op1 * op2;
+                else op1 = op1 / op2;
+                op2 = 0;
+            }
+            operator = c;
+        } else {
+            if (operator != '#') op2 = op2 * 10 + c - '0';
+            else op1 = op1 * 10 + c - '0';
+        }
+    }
+
+    op1 = q1.remove();
+    while (q1.size() > 0) {
+        op2 = q1.remove();
+        operator = q2.remove();
+
+        if (operator == '+') op1 = op1 + op2;
+        else op1 = op1 - op2;
+    }
+
+    return op1;
+}
