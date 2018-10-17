@@ -11,21 +11,22 @@ public String multiply(String num1, String num2) {
 
     int n1 = num1.length();
     int n2 = num2.length();
+    int[] prod = new int[n1 + n2];
     int k = n1 + n2 - 2;
-    int[] prod = new int[n1 + n2];    
     for (int i = 0; i < n1; i++)
-        for (int j = 0; j < n2; j++)
-             prod[k - i - j] += (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+        for (int j = 0; j < n2; j++) {
+            prod[k - i - j] += (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+        }
 
-    k++;
+    k = n1 + n2 - 1;
     int carry = 0;
-    String res = "";
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i <= k; i++) {
         prod[i] += carry;
         carry = prod[i] / 10;
         prod[i] %= 10;
-        if (i < k || prod[i] != 0) res = String.valueOf(prod[i]) + res;
+        if (i < k || prod[i] > 0) sb.append(prod[i]);
     }
 
-    return res;
+    return sb.reverse().toString();
 }
