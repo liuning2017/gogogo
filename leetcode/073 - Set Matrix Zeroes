@@ -1,63 +1,39 @@
-/**
-         * Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
-         **/
-        public static void SetZeroes(int[,] matrix)
-        {
-            int m = matrix.GetLength(0);
-            int n = matrix.GetLength(1);
+Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
 
-            bool firstRow = false;
-            for (int j = 0; j < n; j++)
-            {
-                if (matrix[0, j] == 0)
-                {
-                    firstRow = true;
-                    break;
-                }
+public void setZeroes(int[][] matrix) {
+    boolean zeroRow = false;
+    boolean zeroCol = false;
+    for (int i = 0; i < matrix.length; i++)
+        for (int j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] == 0) {
+                if (i == 0) zeroRow = true;
+                if (j == 0) zeroCol = true;
+                matrix[i][0] = 0;
+                matrix[0][j] = 0;
             }
-
-            bool firstColumn = false;
-            for (int i = 0; i < m; i++)
-            {
-                if (matrix[i, 0] == 0)
-                {
-                    firstColumn = true;
-                    break;
-                }
-            }
-
-            for (int j = 1; j < n; j++)
-                for (int i = 0; i < m; i++)
-                {
-                    if (matrix[i, j] == 0)
-                    {
-                        matrix[0, j] = 0;
-                        break;
-                    }
-                }
-
-            for (int i = 1; i < m; i++)
-                for (int j = 0; j < n; j++)
-                {
-                    if (matrix[i, j] == 0)
-                    {
-                        matrix[i, 0] = 0;
-                        break;
-                    }
-                }
-
-            for (int j = 1; j < n; j++)
-                if (matrix[0, j] == 0)
-                    for (int i = 0; i < m; i++) matrix[i, j] = 0;
-
-            for (int i = 1; i < m; i++)
-                if (matrix[i, 0] == 0)
-                    for (int j = 0; j < n; j++) matrix[i, j] = 0;
-
-            if (firstRow)
-                for (int j = 0; j < n; j++) matrix[0, j] = 0;
-
-            if (firstColumn)
-                for (int i = 0; i < m; i++) matrix[i, 0] = 0;
         }
-        
+
+    for (int i = 1; i < matrix.length; i++) {
+        if (matrix[i][0] == 0) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    for (int j = 1; j < matrix[0].length; j++) {
+        if (matrix[0][j] == 0) {
+            for (int i = 0; i < matrix.length; i++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    if (zeroRow) {
+        for (int j = 1; j < matrix[0].length; j++)  matrix[0][j] = 0;
+    }
+
+    if (zeroCol) {
+        for (int i = 1; i < matrix.length; i++) matrix[i][0] = 0;
+    }
+}
