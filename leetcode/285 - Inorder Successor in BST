@@ -5,19 +5,19 @@ public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
     return findP(root, null, p.val);
 }
 
-private static TreeNode findP(TreeNode node, TreeNode prev, int target) {
+private static TreeNode findP(TreeNode node, TreeNode successor, int target) {
     if (node == null) return null;
     if (node.val == target) {
         if (node.right == null) {
-            return prev;
+            return successor;
         } else {
-            TreeNode successor = node.right;
+            successor = node.right;
             while (successor.left != null) successor = successor.left;
             return successor;
         }
     } else if (node.val > target) {
         return findP(node.left, node, target);
     } else {
-        return findP(node.right, prev, target);
+        return findP(node.right, successor, target);
     }
 }
