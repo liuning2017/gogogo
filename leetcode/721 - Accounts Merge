@@ -35,6 +35,7 @@ public List<List<String>> accountsMerge(List<List<String>> accounts) {
         HashSet<String> set = new HashSet<String>();
         Map.Entry<Integer, List<String>> entry = a2ms.entrySet().iterator().next();
         merge(a2ms, m2as, entry.getKey(), set);
+
         List<String> account = new ArrayList<String>(set);
         Collections.sort(account);
         account.add(0, entry.getValue().get(0));
@@ -44,22 +45,19 @@ public List<List<String>> accountsMerge(List<List<String>> accounts) {
     return res;
 }
 
-private static void merge(HashMap<Integer, List<String>> a2ms, HashMap<String, List<Integer>> m2as, 
+private static void merge(HashMap<Integer, List<String>> a2ms, 
+                          HashMap<String, List<Integer>> m2as, 
                           Integer accountId, HashSet<String> set) {
     if (!a2ms.containsKey(accountId)) return;
-    List<String> account = a2ms.get(accountId);
-    a2ms.remove(accountId);
+
+    List<String> account = a2ms.remove(accountId);
     for (int i = 1; i < account.size(); i++) {
         String email = account.get(i);
-        if (!set.contains(email)) {
-            set.add(email);
-            if (m2as.containsKey(email)) {
-                List<Integer> ids = m2as.get(email);
-                m2as.remove(email);
-                for (int id : ids) {
-                    if (id != accountId) merge(a2ms, m2as, id, set);
-                }
-            }
+        if (set.contains(email)) continue;
+        set.add(email);
+        List<Integer> ids = m2as.remove(email);
+        for (int id : ids) {
+            if (id != accountId) merge(a2ms, m2as, id, set);
         }
     }
 }
