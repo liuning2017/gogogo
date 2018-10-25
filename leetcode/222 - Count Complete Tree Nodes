@@ -4,43 +4,20 @@ In a complete binary tree every level, except possibly the last, is completely f
 It can have between 1 and 2h nodes inclusive at the last level h.
 
 public int countNodes(TreeNode root) {
-    if (root == null) return 0;
-    int height = getHeight(root);
-    int[] leavesNo = new int[1];
-    findLeaves(root, height, 0, leavesNo);
-    return (int)Math.pow(2, height - 1) - 1 + leavesNo[0];
+    int h = height(root);
+    if (h < 0) return 0;
+
+    if (height(root.right) == h - 1)
+        return (1 << h) + countNodes(root.right);
+    else 
+        return (1 << h - 1) + countNodes(root.left);
 }
 
-private static int getHeight(TreeNode root) {
-    TreeNode node = root;
-    int height = 0;
-    while (node != null) {
+private static int height(TreeNode root) {
+    int height = -1;
+    while (root != null) {
         height++;
-        node = node.left;
+        root = root.left;
     }
     return height;
-}
-
-private static boolean findLeaves(TreeNode node, int height, int k, int[] leavesNo) {
-    k++;
-    if (k == height) {
-        leavesNo[0]++;
-        return true;
-    } else if (k == height - 1) {
-        if (node.left == null) {
-            return false;
-        } else {
-            leavesNo[0]++;
-        }
-
-        if (node.right == null) {
-            return false;
-        } else {
-            leavesNo[0]++;
-            return true;
-        }
-    }
-
-    if (findLeaves(node.left, height, k, leavesNo)) return findLeaves(node.right, height, k, leavesNo);
-    return false;
 }
