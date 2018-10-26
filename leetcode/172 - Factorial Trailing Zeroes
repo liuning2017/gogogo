@@ -5,8 +5,8 @@ public int trailingZeroes(int n) {
     int res = 0;
     long m = n;
     while (m > 0) {
-        res += m / 5;
         m /= 5;
+        res += m;
     }
     return res;
 }
