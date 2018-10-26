@@ -22,7 +22,6 @@ private static boolean checkSum(TreeNode node, int sum, int target) {
         return sum == target;
     }
 
-    if (node.left != null && checkSum(node.left, sum, target)) return true;
-    if (node.right == null) return false;
-    return checkSum(node.right, sum, target);
+    return node.left != null && checkSum(node.left, sum, target) || 
+        node.right != null && checkSum(node.right, sum, target);
 }
