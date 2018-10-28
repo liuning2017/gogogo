@@ -12,23 +12,28 @@ Output:
 ]
 
 public List<List<String>> groupStrings(String[] strs) {
-    List<List<String>> res = new ArrayList<List<String>>();
-    if (strs == null || strs.length == 0) return res;
+      List<List<String>> res = new ArrayList<List<String>>();
+      if (strs == null || strs.length == 0) return res;
 
-    HashMap<String, List<String>> map = new HashMap<String, List<String>>();
-    for (String str : strs) {
-        int offset = str.charAt(0) - 'a';
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char c = (char)(str.charAt(i) - offset);
-            if (c < 'a') c += 26;
-            sb.append(c);
-        }
-        String key = sb.toString();
-        if (!map.containsKey(key)) map.put(key, new ArrayList<String>());
-        map.get(key).add(str);
-    }
+      HashMap<String, List<String>> map = new HashMap<String, List<String>>();
+      for (String str : strs) {
+          String key = getKey(str);
+          if (!map.containsKey(key)) map.put(key, new ArrayList<String>());
+          map.get(key).add(str);
+      }
 
-    for (List<String> list : map.values()) res.add(list);
-    return res;
-}
+      for (List<String> list : map.values()) res.add(list);
+      return res;
+  }
+
+  private static String getKey(String str) {
+      int offset = str.charAt(0) - 'a';
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < str.length(); i++) {
+          char c = (char)(str.charAt(i) - offset);
+          if (c < 'a') c += 26;
+          sb.append(c);
+      }
+
+      return sb.toString();
+  }
