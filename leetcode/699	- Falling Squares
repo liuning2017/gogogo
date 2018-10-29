@@ -1,0 +1,56 @@
+On an infinite number line (x-axis), we drop given squares in the order they are given.
+The i-th square dropped (positions[i] = (left, side_length)) is a square with the left-most point being positions[i][0] and sidelength positions[i][1].
+The square is dropped with the bottom edge parallel to the number line, and from a higher height than all currently landed squares. We wait for each square to stick before dropping the next.
+The squares are infinitely sticky on their bottom edge, and will remain fixed to any positive length surface they touch (either the number line or another square). Squares dropped adjacent to each other will not stick together prematurely.
+Return a list ans of heights. Each height ans[i] represents the current highest height of any square we have dropped, after dropping squares represented by positions[0], positions[1], ..., positions[i].
+
+Example 1:
+Input: [[1, 2], [2, 3], [6, 1]]
+Output: [2, 5, 5]
+
+Example 2:
+Input: [[100, 100], [200, 100]]
+Output: [100, 100]
+
+1 <= positions.length <= 1000.
+1 <= positions[i][0] <= 10^8.
+1 <= positions[i][1] <= 10^6.
+
+class Solution {
+    public List<Integer> fallingSquares(int[][] positions) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (positions == null || positions.length == 0) return res;
+        
+        List<Interval> intervals = new ArrayList<Interval>();
+        for (int[] position : positions) {
+            int height = getHeight(intervals, position);
+            int maxHeight = res.size() == 0 ? height : Math.max(height, res.get(res.size() - 1));
+            res.add(maxHeight);
+        }
+        
+        return res;
+    }
+    
+    private static int getHeight(List<Interval> intervals, int[] position) {
+        int height = 0;
+        for (Interval interval : intervals) {
+            if (interval.left >= position[0] + position[1]) continue;
+            if (interval.right <= position[0]) continue;
+            height = Math.max(height, interval.height);
+        }
+        height += position[1];
+        intervals.add(new Interval(position[0], position[0] + position[1], height));
+        return height;
+    }
+}
+
+class Interval {
+    public int left;
+    public int right;
+    public int height;
+    public Interval (int left, int right, int height) {
+        this.left = left;
+        this.right = right;
+        this.height = height;
+    }
+}
