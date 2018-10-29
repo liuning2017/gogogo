@@ -6,7 +6,6 @@ Here is an example: S = "rabbbit", T = "rabbit". Return 3.
 public int numDistinct(String s, String t) {
     int[][] dp = new int[t.length() + 1][s.length() + 1];
     for (int j = 0; j <= s.length(); j++) dp[0][j] = 1;
-    for (int i = 1; i <= t.length(); i++) dp[i][0] = 0;
 
     for (int i = 1; i <= t.length(); i++)
         for (int j = 1; j <= s.length(); j++) {
