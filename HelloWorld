@@ -1,0 +1,30 @@
+int[][] directions = new int[4][];
+directions[0] = new int[] { -1, 0 };
+directions[1] = new int[] { 0, 1 };
+directions[2] = new int[] { 1, 0 };
+directions[3] = new int[] { 0, -1 };
+
+Convert List<Integer> to int[]:
+int[] nums = list.stream().mapToInt(Integer::intValue).toArray();
+Convert int[] to List<Integer>:
+List<Integer> list = Arrays.stream(nums).boxed().collect(Collectors.toList());
+
+Initialize all the elements in an array to a specific value:
+int[] candies = new int[n];
+Arrays.fill(candies, 1);
+
+Initialize hash set with values: 
+HashSet<String> hs = new HashSet<>(Arrays.asList("a", "b"));
+
+Split string by multiple spaces: String[] words = s.split("\\s+");
+Split string by dots: String[] strs1 = version1.split("\\.");  //165. Compare Version Numbers
+Connect words in array with space: String sentence = String.join(" ", words);
+
+class IntervalComparator implements Comparator<Interval> {
+    public int compare(Interval interval1, Interval interval2) {
+        return interval1.start - interval2.start;
+    }
+}
+
+Create TreeMap object in reverse order:
+TreeMap<Integer, List<Integer>> tm = new TreeMap<Integer, List<Integer>>(Collections.reverseOrder());
