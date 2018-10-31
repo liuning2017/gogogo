@@ -1,71 +1,46 @@
-/**
-         * There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. 
-         * For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. 
-         * And we defined a friend circle is a group of students who are direct or indirect friends.
-        Given a N*N matrix M representing the friend relationship between students in the class. 
-        If M[i][j] = 1, then the ith and jth students are direct friends with each other, otherwise not. 
-        And you have to output the total number of friend circles among all the students.
+There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. 
+For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. 
+And we defined a friend circle is a group of students who are direct or indirect friends.
+Given a N*N matrix M representing the friend relationship between students in the class. 
+If M[i][j] = 1, then the ith and jth students are direct friends with each other, otherwise not. 
+And you have to output the total number of friend circles among all the students.
 
-        Example 1:
-        Input: 
-        [[1,1,0],
-         [1,1,0],
-         [0,0,1]]
-        Output: 2
-        Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. 
-        The 2nd student himself is in a friend circle. So return 2.
+Example 1:
+Input: 
+[[1,1,0],
+ [1,1,0],
+ [0,0,1]]
+Output: 2
+Explanation:The 0th and 1st students are direct friends, so they are in a friend circle. 
+The 2nd student himself is in a friend circle. So return 2.
 
-        Example 2:
-        Input: 
-        [[1,1,0],
-         [1,1,1],
-         [0,1,1]]
-        Output: 1
-        Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, 
-        so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
-         **/
-        public static int FriendCircles(int[][] grid)
-        {
-            Tuple<int, int>[] directions = new Tuple<int, int>[4];
-            directions[0] = new Tuple<int, int>(0, -1);
-            directions[1] = new Tuple<int, int>(-1, 0);
-            directions[2] = new Tuple<int, int>(0, 1);
-            directions[3] = new Tuple<int, int>(1, 0);
+Example 2:
+Input: 
+[[1,1,0],
+ [1,1,1],
+ [0,1,1]]
+Output: 1
+Explanation:The 0th and 1st students are direct friends, the 1st and 2nd students are direct friends, 
+so the 0th and 2nd students are indirect friends. All of them are in the same friend circle, so return 1.
 
-            int cnt = 0;
-            for (int i = 0; i < grid.Length; i++)
-                for (int j = 0; j < grid[0].Length; j++)
-                    if (grid[i][j] == 1)
-                    {
-                        cnt++;
-                        CountFriendCircles(directions, grid, i, j);
-                    }
-
-            return cnt;
+public int findCircleNum(int[][] m) {
+    int res = 0;
+    for (int i = 0; i < m.length; i++) {
+        if (m[i][i] == 1) {
+            res++;
+            mark(m, i);
         }
-        private static void CountFriendCircles(Tuple<int, int>[] directions, int[][] grid, int r, int c)
-        {
-            if (r < 0 || c < 0 || r >= grid.Length || c >= grid[0].Length || grid[r][c] < 1) return;
-            grid[r][c] = -1;
-            foreach (var direction in directions)
-            {
-                CountFriendCircles(directions, grid, r + direction.Item1, c + direction.Item2);
-            }
-        }
-        
-        [TestMethod]
-        public void FriendCircles()
-        {
-            int[][] grid = new int[3][];
-            grid[0] = new int[] { 1, 1, 0, };
-            grid[1] = new int[] { 1, 1, 0,  };
-            grid[2] = new int[] { 0, 0, 1 };
-            Assert.AreEqual(2, DPAndRecursion.FriendCircles(grid));
+    }
 
-            grid = new int[3][];
-            grid[0] = new int[] { 1, 1, 0, };
-            grid[1] = new int[] { 1, 1, 1, };
-            grid[2] = new int[] { 0, 1, 1 };
-            Assert.AreEqual(1, DPAndRecursion.FriendCircles(grid));
+    return res;
+}
+
+private static void mark(int[][] m, int i) {        
+    m[i][i] = -1;
+    for (int j = 0; j < m.length; j++) {
+        if (m[i][j] == 1) {
+            m[i][j] = -1;
+            mark(m, j);
         }
-        
+    }
+}
