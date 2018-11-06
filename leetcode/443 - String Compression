@@ -1,0 +1,67 @@
+Given an array of characters, compress it in-place.
+The length after compression must always be smaller than or equal to the original array.
+Every element of the array should be a character (not int) of length 1.
+After you are done modifying the input array in-place, return the new length of the array.
+Follow up: Could you solve it using only O(1) extra space?
+
+Example 1:
+Input: ["a","a","b","b","c","c","c"]
+Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
+
+Example 2:
+Input: ["a"]
+Output: Return 1, and the first 1 characters of the input array should be: ["a"]
+
+Example 3:
+Input: ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
+
+Note:All characters have an ASCII value in [35, 126]. 1 <= len(chars) <= 1000.
+
+public int compress(char[] chars) {
+    if (chars == null) return 0;
+    int n = chars.length;
+    if (n < 2) return n;
+
+    char current = chars[0];
+    int j = 0;
+    int cnt = 1;
+    for (int i = 1; i < n; i++) {
+        if (chars[i] == current) {
+            cnt++;
+            continue;
+        } 
+
+        j++;
+        if (cnt > 1) {
+            int k = getHigh(cnt);
+            while (k > 0) {
+                chars[j++] = (char)('0' + (cnt / k));
+                cnt %= k;
+                k /= 10;
+            }
+        }
+
+        chars[j] = chars[i];
+        current = chars[i];
+        cnt = 1;
+    }
+
+    j++;
+    if (cnt > 1) {
+        int k = getHigh(cnt);
+        while (k > 0) {
+            chars[j++] = (char)('0' + (cnt / k));
+            cnt %= k;
+            k /= 10;
+        }
+    }
+
+    return j;
+}
+
+private static int getHigh(int cnt) {
+    int k = 1;
+    while (cnt / k > 0) k *= 10;
+    return k / 10;
+}
