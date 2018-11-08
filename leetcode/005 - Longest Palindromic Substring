@@ -4,23 +4,25 @@ Example: Input: "babad", Output: "bab". Note: "aba" is also a valid answer.
 Example: Input: "cbbd", Output: "bb"
 
 public String longestPalindrome(String s) {
-    if (s == null || s.length() == 0) return "";
+    if (s == null || s.length() == 0) return s;
 
+    int maxLen = -1;
+    String res = "";
     int n = s.length();
     boolean[][] dp = new boolean[n][n];
-    int start = 0;
-    int maxLen = 1;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < i; j ++) {
-            if (s.charAt(i) == s.charAt(j) && (i - j <= 2 || dp[j + 1][i - 1])) dp[j][i] = true;
-            if (dp[j][i] && maxLen < i - j  + 1) {
-                maxLen = i - j + 1;
-                start = j;
-            }
+    for (int i = 0; i < n ; i++)
+        for (int j = i; j >= 0; j--) {
+            if (s.charAt(i) != s.charAt(j)) continue;
+
+            int len = i - j;
+            if (len < 3 || dp[j + 1][i - 1]) {
+                dp[j][i] = true;
+                if (len > maxLen) {
+                    maxLen = len;
+                    res = s.substring(j, i + 1);
+                }
+            } 
         }
 
-        dp[i][i] = true;
-    }
-
-    return s.substring(start, start + maxLen);
+    return res;
 }
