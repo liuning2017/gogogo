@@ -32,22 +32,18 @@ public int compress(char[] chars) {
             continue;
         } 
 
-        j++;
-        if (cnt > 1) {
-            int k = getHigh(cnt);
-            while (k > 0) {
-                chars[j++] = (char)('0' + (cnt / k));
-                cnt %= k;
-                k /= 10;
-            }
-        }
-
+        j = insertNumber(chars, cnt, j);
         chars[j] = chars[i];
         current = chars[i];
         cnt = 1;
     }
 
+    return insertNumber(chars, cnt, j);
+}
+
+private static int insertNumber(char[] chars, int cnt, int j) {
     j++;
+
     if (cnt > 1) {
         int k = getHigh(cnt);
         while (k > 0) {
