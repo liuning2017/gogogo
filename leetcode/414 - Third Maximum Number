@@ -1,0 +1,29 @@
+Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the maximum number. The time complexity must be in O(n).
+Example 1: Input: [3, 2, 1], Output: 1
+Example 2: Input: [1, 2], Output: 2
+Example 3: Input: [2, 2, 3, 1], Output: 1
+
+public int thirdMax(int[] nums) {
+    List<Integer> list = new ArrayList<Integer>();
+
+    for (int num : nums) {
+        int len = list.size();
+
+        if (len == 0) {
+            list.add(num);
+        } else if (num > list.get(len - 1)) {
+            if (len == 3) list.remove(0);
+            list.add(num);
+        } else if (num < list.get(0)) {
+            if (len < 3) list.add(0, num);
+        } else {
+            int i = 0;
+            while (num > list.get(i)) i++;
+            if (num < list.get(i)) list.add(i, num);
+            if (list.size() > 3) list.remove(0);
+        }
+    }
+
+    if (list.size() == 3) return list.get(0);
+    else return list.get(list.size() - 1);
+}
