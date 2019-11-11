@@ -1,3 +1,5 @@
+Given a non-empty array containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.
+
 public boolean canPartition(int[] nums) {
     if (nums == null || nums.length < 2) return false;
     int sum = 0;
