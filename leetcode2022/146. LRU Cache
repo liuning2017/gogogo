@@ -1,0 +1,86 @@
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+class LRUCache {
+
+    private DLL head;
+    private DLL tail;
+    Map<Integer, DLL> map;
+    private int cap;
+    
+    public LRUCache(int capacity) {
+        head = new DLL();
+        tail = new DLL();
+        head.next = tail;
+        tail.pre = head;
+        
+        cap = capacity;
+        map = new HashMap(capacity);
+    }
+    
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        
+        DLL dll = map.get(key);
+        dll.pre.next = dll.next;
+        dll.next.pre = dll.pre;
+        
+        placeAfterHead(dll);
+        return dll.val;
+    }
+    
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            DLL dll = map.get(key);
+            dll.val = value;
+            
+            dll.pre.next = dll.next;
+            dll.next.pre = dll.pre; 
+            
+            placeAfterHead(dll);
+        } else {
+            if (map.size() == cap) {
+                map.remove(tail.pre.key);
+                tail.pre.pre.next = tail;
+                tail.pre = tail.pre.pre;
+            }
+            DLL dll = new DLL(key, value);
+            map.put(key, dll);
+            
+            placeAfterHead(dll);
+        }
+    }
+    
+    private void placeAfterHead(DLL dll) {
+        head.next.pre = dll;
+        dll.next = head.next;
+        head.next = dll;
+        dll.pre = head;
+    }
+}
+
+class DLL {
+    public DLL pre;
+    public DLL next;
+    public int key;
+    public int val;
+    
+    public DLL() {}
+    
+    public DLL(int key, int value) {
+        this.key = key;
+        this.val = value;
+    }
+}
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
