@@ -1,0 +1,35 @@
+Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
+If two nodes are in the same row and column, the order should be from left to right.
+
+class Solution {
+  public List<List<Integer>> verticalOrder(TreeNode root) {
+    if (root == null) return new ArrayList();
+    
+    Map<Integer, List<Integer>> map = new TreeMap();
+    Queue<IdxTreeNode> queue = new LinkedList();
+    queue.add(new IdxTreeNode(0, root));
+    
+    while (!queue.isEmpty()) {
+      IdxTreeNode idxNode = queue.poll();
+      int idx = idxNode.idx;
+      TreeNode node = idxNode.node;
+      
+      if (!map.containsKey(idx)) map.put(idx, new ArrayList());
+      map.get(idx).add(node.val);
+      
+      if (node.left != null) queue.add(new IdxTreeNode(idx - 1, node.left));
+      if (node.right != null) queue.add(new IdxTreeNode(idx + 1, node.right));
+    }
+    
+    return new ArrayList<List<Integer>>(map.values());
+  }
+  
+  private class IdxTreeNode {
+    int idx;
+    TreeNode node;
+    IdxTreeNode (int idx, TreeNode node) {
+      this.idx = idx;
+      this.node = node;
+    }
+  }
+}
