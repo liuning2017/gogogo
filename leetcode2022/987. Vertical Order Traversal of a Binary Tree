@@ -1,0 +1,53 @@
+Given the root of a binary tree, calculate the vertical order traversal of the binary tree.
+For each node at position (row, col), its left and right children will be at positions (row + 1, col - 1) and (row + 1, col + 1) respectively. The root of the tree is at (0, 0).
+The vertical order traversal of a binary tree is a list of top-to-bottom orderings for each column index starting from the leftmost column and ending on the rightmost column. There may be multiple nodes in the same row and same column. In such a case, sort these nodes by their values.
+Return the vertical order traversal of the binary tree.
+
+class Solution {
+  public List<List<Integer>> verticalTraversal(TreeNode root) {
+    if (root == null) return new ArrayList();
+    
+    Map<Integer, Map<Integer, List<Integer>>> map = new TreeMap();
+    Queue<PositionNode> queue = new LinkedList();
+    queue.add(new PositionNode(0, 0, root));
+    
+    while (!queue.isEmpty()) {
+      PositionNode idxNode = queue.poll();
+      int row = idxNode.row;
+      int col = idxNode.col;
+      TreeNode node = idxNode.node;
+      
+      if (!map.containsKey(col)) map.put(col, new TreeMap());
+      Map<Integer, List<Integer>> rowMap = map.get(col);
+      if (!rowMap.containsKey(row)) rowMap.put(row, new ArrayList());
+      rowMap.get(row).add(node.val);
+      
+      if (node.left != null) queue.add(new PositionNode(row + 1, col - 1, node.left));
+      if (node.right != null) queue.add(new PositionNode(row + 1, col + 1, node.right));
+    }
+    
+    List<List<Integer>> res = new ArrayList();
+    for (Map<Integer, List<Integer>> rowMap : map.values()) {
+      List<Integer> list = new ArrayList();
+      for (List<Integer> vals : rowMap.values()) {
+        Collections.sort(vals);
+        list.addAll(vals);
+      }
+      res.add(list);
+    }
+    
+    return res;
+  }
+  
+  private class PositionNode {
+    int row;
+    int col;
+    TreeNode node;
+    
+    PositionNode (int row, int column, TreeNode node) {
+      this.row = row;
+      this.col = column;
+      this.node = node;
+    }
+  }
+}
