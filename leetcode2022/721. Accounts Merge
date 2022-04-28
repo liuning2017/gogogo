@@ -60,7 +60,7 @@ class Solution {
           }
         }
 
-        moreEmails.removeAll(emails);
+        moreEmails.removeAll(accountEmails.get(i));
         if (moreEmails.isEmpty()) break;
         accountEmails.get(i).addAll(moreEmails);
         emails = moreEmails;
