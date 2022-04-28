@@ -1,0 +1,61 @@
+You are given an integer num. You can swap two digits at most once to get the maximum valued number.
+Return the maximum valued number you can get.
+
+Example 1:
+Input: num = 2736
+Output: 7236
+Explanation: Swap the number 2 and the number 7.
+
+Example 2:
+Input: num = 9973
+Output: 9973
+Explanation: No swap.
+
+Constraints:
+0 <= num <= 108
+
+class Solution {
+  public int maximumSwap(int num) {
+    List<Integer> list = new ArrayList();
+    int dividend = num;
+    while (dividend > 0) {
+      int remainder = dividend % 10;
+      list.add(0, remainder);
+      dividend = dividend / 10;
+    }
+    
+    int low = -1;
+    for (int i = 0; i < list.size() - 1; i++) {
+      if (list.get(i) < list.get(i + 1)) {
+        low = i;
+        break;
+      }
+    }
+    
+    if (low == -1) return num;
+    
+    int maxIdx = low + 1;
+    int max = list.get(maxIdx);
+    for (int i = maxIdx + 1; i < list.size(); i++) {
+      if (list.get(i) >= max) {
+        max = list.get(i);
+        maxIdx = i;
+      }
+    }
+    
+    while (low > -1 && list.get(low) < max) low--;
+    swap(list, low + 1, maxIdx);
+    
+    int res = 0;
+    for (int digit : list) {
+      res = res * 10 + digit;
+    }
+    return res;
+  }
+  
+  private void swap(List<Integer> list, int i, int j) {
+    int tmp = list.get(i);
+    list.set(i, list.get(j));
+    list.set(j, tmp);
+  }
+}
