@@ -1,0 +1,55 @@
+Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+Return all the possible results. You may return the answer in any order.
+
+Example 1:
+Input: s = "()())()"
+Output: ["(())()","()()()"]
+
+Example 2:
+Input: s = "(a)())()"
+Output: ["(a())()","(a)()()"]
+
+Example 3:
+Input: s = ")("
+Output: [""]
+ 
+Constraints:
+1 <= s.length <= 25
+s consists of lowercase English letters and parentheses '(' and ')'.
+There will be at most 20 parentheses in s.
+
+class Solution {
+  public List<String> removeInvalidParentheses(String s) {
+    List<String> res = new ArrayList();
+    if (s == null || s.isEmpty()) return res;
+    
+    remove(s, 0, 0, new char[]{'(', ')'}, res);
+    return res;
+  }
+  
+  private void remove(String s, int lastI, int lastJ, char[] pair, List<String> res) {
+    int cnt = 0;
+    for (int i = lastI; i < s.length(); i++) {
+      if (s.charAt(i) == pair[0]) cnt++;
+      else if (s.charAt(i) == pair[1]) cnt--;
+      
+      if (cnt >= 0) continue;
+      
+      for (int j = lastJ; j <= i; j++) {
+        if (s.charAt(j) == pair[1] && (j == lastJ || s.charAt(j - 1) != pair[1])) {
+          remove(s.substring(0, j) + s.substring(j + 1), i, j, pair, res);
+        }
+      }
+      
+      return;
+    }
+    
+    StringBuilder sb = new StringBuilder(s);
+    s = sb.reverse().toString();
+    if (pair[0] == '(') {
+      remove(s, 0, 0, new char[]{')', '('}, res);
+    } else {
+      res.add(s);
+    }
+  }
+}
